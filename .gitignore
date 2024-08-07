@@ -1,0 +1,57 @@
+# 프로젝트 관련
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# STS 관련
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# IntelliJ IDEA 관련
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# NetBeans 관련
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code 관련
+.vscode/
+
+# Node.js 및 React 관련
+frontend/node_modules/
+frontend/build/
+
+# 로그 파일
+*.log
+
+# 운영 체제 관련 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 환경 변수 파일
+.env
+
+# 기타 IDE 관련 파일
+/.metadata
+/.recommenders
