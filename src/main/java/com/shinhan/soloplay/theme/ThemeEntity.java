@@ -3,7 +3,7 @@ package com.shinhan.soloplay.theme;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.shinhan.soloplay.auth.AuthEntity;
+import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +34,7 @@ public class ThemeEntity {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private AuthEntity user;
+    private UserEntity user;
 
     @Column(name = "THEME_NAME", nullable = false)
     private String themeName;
