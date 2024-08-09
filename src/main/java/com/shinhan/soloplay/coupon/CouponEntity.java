@@ -21,6 +21,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="coupon")
 public class CouponEntity {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer couponHistoryId;
 	private int isUsed;
 	private LocalDateTime expirationDate;
