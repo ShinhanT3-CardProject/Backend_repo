@@ -1,5 +1,7 @@
 package com.shinhan.soloplay.coupon;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -17,11 +19,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="coupon")
-public class CouponEntity {
+@Table(name="coupon_history")
+public class CouponHistoryEntity {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer couponId;
-	private double discountRate;
-	private int maxDiscount;
+	private Integer couponHistoryId;
+	private int isUsed;
+	private LocalDateTime expirationDate;
 }
