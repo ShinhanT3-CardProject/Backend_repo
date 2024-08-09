@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.auth;
+package com.shinhan.soloplay.user;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "USER")
-public class AuthEntity {
+public class UserEntity {
 	@Id
 	@Column(name = "USER_ID", nullable = true, length = 255)
 	private String userId;
@@ -25,8 +25,8 @@ public class AuthEntity {
 	@Column(name = "USER_NAME", nullable = false, length = 255)
 	private String userName;
 
-	@Column(name = "USER_PWD", nullable = false, length = 255)
-	private String userPwd;
+	@Column(name = "USER_PASSWORD", nullable = false, length = 255)
+	private String userPassword;
 
 	@Column(name = "CREATE_DATE", nullable = false)
 	private LocalDateTime createDate;
