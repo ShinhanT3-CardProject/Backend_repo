@@ -1,8 +1,9 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.card;
 import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +14,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "participant")
-public class ParticipantEntity {
+@Table(name = "UserCard")
+public class UserCardEntity {
 	
-	@EmbeddedId
-	private ParticipantId participantId;
+	@Id
+	private String cardNum;
 	
-	private int contribution;
-	private int attack;
-	@CreationTimestamp
-	private Timestamp createTime;
+	private int cardId;
+	private int userId; 
+	
 }

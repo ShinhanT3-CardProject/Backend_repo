@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.coupon;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/card")
+@RequestMapping("/coupon")
 @RequiredArgsConstructor
-public class RaidController {
-
+public class CouponController {
+	
 }
