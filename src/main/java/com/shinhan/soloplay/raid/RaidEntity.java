@@ -26,7 +26,7 @@ public class RaidEntity {
 	
 	private int hitPoint;
 	private Timestamp startTime;
-	private Timestamp deadline;
+	private Timestamp endTime;
 	private int reward;
 	private int isSuccess;
 	
