@@ -22,7 +22,7 @@ public class RaidEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer raidId;
+	private Long raidId;
 	
 	private int hitPoint;
 	private Timestamp startTime;

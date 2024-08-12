@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class ParticipantId implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	@ManyToOne
 	private RaidEntity raidEntity;
 	

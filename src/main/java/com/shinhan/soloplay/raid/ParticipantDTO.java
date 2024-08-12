@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RaidDTO {
-
+public class ParticipantDTO {
+	
 	Long raidId;
-	int hitPoint;
-	Timestamp startTime;
-	Timestamp endTime;
-	int reward;
-	int isSuccess;
+	String userId;
+	int contribution;
+	int attack;
+	Timestamp createTime;
 }
