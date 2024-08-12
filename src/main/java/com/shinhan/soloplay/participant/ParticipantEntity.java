@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.participant;
 import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.EmbeddedId;

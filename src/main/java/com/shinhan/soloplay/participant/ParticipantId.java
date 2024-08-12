@@ -1,7 +1,8 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.participant;
 
 import java.io.Serializable;
 
+import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.persistence.Column;

@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.participant;
 
 import java.util.List;
 
