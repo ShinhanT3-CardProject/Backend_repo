@@ -22,10 +22,10 @@ import lombok.NoArgsConstructor;
 public class MerchantEntity {
 
     @Id
-    @Column(name = "MERCHANT_ID", nullable = false, length = 255)
+    @Column(name = "MERCHANT_ID", nullable = false)
     private String merchantId;
 
-    @Column(name = "MERCHANT_ADDRESS", nullable = true, length = 255)
+    @Column(name = "MERCHANT_ADDRESS", nullable = false)
     private String merchantAddress;
 
     @Column(name = "SUB_CATEGORY_ID", nullable = false)
