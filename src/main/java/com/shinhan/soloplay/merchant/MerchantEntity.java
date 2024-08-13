@@ -29,7 +29,7 @@ public class MerchantEntity {
     private String merchantAddress;
 
     @Column(name = "SUB_CATEGORY_ID", nullable = false)
-    private Integer subCategoryId;
+    private Long subCategoryId;
     
     @ManyToOne
     @JoinColumn(name = "themeSubCategoryId")
