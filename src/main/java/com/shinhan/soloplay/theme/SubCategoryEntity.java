@@ -29,7 +29,7 @@ public class SubCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "THEME_SUB_CATEGORY_ID")
-    private Integer themeSubCategoryId;
+    private Long themeSubCategoryId;
 
     @ManyToOne
     @JoinColumn(name = "THEME_MAIN_CATEGORY_ID")
