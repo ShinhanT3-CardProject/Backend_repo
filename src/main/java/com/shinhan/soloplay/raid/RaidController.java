@@ -1,43 +1,36 @@
 package com.shinhan.soloplay.raid;
 
-import java.util.Random;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
+import com.shinhan.soloplay.participant.ParticipantDTO;
+import com.shinhan.soloplay.participant.ParticipantService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/raid")
-@RequiredArgsConstructor
 public class RaidController {
+	
+	@Autowired
+	ParticipantService participantService;
 
-	@GetMapping("/result/{power}")
-	int calculateDamage(@PathVariable int power) {
-		
-		Random random = new Random();
-
-        // 두 개의 주사위를 굴립니다.
-        int dice1 = random.nextInt(6) + 1;  // 1부터 6까지의 무작위 숫자
-        int dice2 = random.nextInt(6) + 1;  // 1부터 6까지의 무작위 숫자
-        
-        int multiplier = 1; // 공격 배수
-        
-        if (dice1 == dice2) {
-        	if (dice1 == 6) {
-        		multiplier = 3; // 12가 나오면 3배수
-        	}else if (dice1 == 1) {
-        		multiplier = 0; // 2가 나오면 미스
-        	}else {
-        		multiplier = 2;
-        	}
-        }
-        
-        int damage = power * multiplier; // 최종 대미지
-        
-		return damage; 
+	@GetMapping("/participate/{raidId}")
+	void participate(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
+		String userId = (String)httpSession.getAttribute("loginUser");
+		if (participantService.findById(raidId, userId) == null) {
+			participantService.participate(raidId, userId, 100);
+		}else {
+			
+		}
 	}
 	
+	@GetMapping("/result/{raidId}")
+	ParticipantDTO result(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
+		String userId = (String)httpSession.getAttribute("loginUser");
+		return participantService.findById(raidId, userId);
+	}
 }

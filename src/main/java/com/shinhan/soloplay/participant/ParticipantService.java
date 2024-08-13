@@ -1,39 +1,57 @@
 package com.shinhan.soloplay.participant;
 
 import java.util.List;
+import java.util.Map;
+
+import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.user.UserEntity;
+
 
 public interface ParticipantService {
-
+	
 	//CRUD
 	//1.Create
-	void create(ParticipantDTO dto);
+	void participate(Long raidId, String userId, int attack);
 	
 	//2.Read
-	List<ParticipantDTO> readAll();
-	ParticipantDTO readById(Long raidId, String userId);
+	List<ParticipantDTO> findAll();
+	ParticipantDTO findById(Long raidId, String userId);
 	
 	//3.Update
-	void update(ParticipantDTO dto);
+	void addAttack(Long raidId, String userId, int attackIncrement);
+	Map<String, Integer> attack(ParticipantDTO dto);
 	
 	//Entity -> DTO
-	default ParticipantDTO entityToDTO(ParticipantEntity entity) {
-		ParticipantDTO dto = ParticipantDTO.builder()
-				.raidId(entity.getParticipantId().getRaidEntity().getRaidId())
-				.userId(entity.getParticipantId().getUserEntity().getUserId())
-				.contribution(entity.getContribution())
-				.attack(entity.getAttack())
-				.createTime(entity.getCreateTime())
+	default ParticipantDTO entityToDTO(ParticipantEntity participantEntity) {
+		ParticipantDTO participantDTO = ParticipantDTO.builder()
+				.raidId(participantEntity.getParticipantId().getRaidEntity().getRaidId())
+				.userId(participantEntity.getParticipantId().getUserEntity().getUserId())
+				.contribution(participantEntity.getContribution())
+				.attack(participantEntity.getAttack())
+				.createTime(participantEntity.getCreateTime())
 				.build();
-		return dto;
+		return participantDTO;
 	}
 	
 	//DTO -> Entity
-	// raidEntity와 userEntity 만든 후 만들 수 있음
-//	default ParticipantEntity dtoToEntity(ParticipantDTO dto) {
-//		ParticipantId participantId;
-//		ParticipantEntity entity = ParticipantEntity.builder()
-//				.participantId(participantId)
-//				.build();
-//		return entity;
-//	}
+	default ParticipantEntity dtoToEntity(ParticipantDTO participantDTO) {
+		UserEntity userEntity = UserEntity.builder()
+				.userId(participantDTO.getUserId())
+				.build();
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(participantDTO.getRaidId())
+				.build();
+		ParticipantId participantId = ParticipantId.builder()
+				.userEntity(userEntity)
+				.raidEntity(raidEntity)
+				.build();
+		
+		ParticipantEntity participantEntity = ParticipantEntity.builder()
+				.participantId(participantId)
+				.attack(participantDTO.getAttack())
+				.contribution(participantDTO.getContribution())
+				.createTime(participantDTO.getCreateTime())
+				.build();
+		return participantEntity;
+	}
 }
