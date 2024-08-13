@@ -9,5 +9,4 @@ public class SoloplayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SoloplayApplication.class, args);
 	}
-
 }
