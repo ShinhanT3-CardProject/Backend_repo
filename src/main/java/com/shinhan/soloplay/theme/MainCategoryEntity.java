@@ -25,7 +25,7 @@ public class MainCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "THEME_MAIN_CATEGORY_ID")
-    private Integer themeMainCategoryId;
+    private Long themeMainCategoryId;
 
     @Column(name = "THEME_MAIN_CATEGORY_NAME")
     private String themeMainCategoryName;

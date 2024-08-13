@@ -1,7 +1,5 @@
 package com.shinhan.soloplay.coupon;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +20,7 @@ public class CouponEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long couponId;
+	private String couponName;
 	private double discountRate;
 	private int maxDiscount;
 }
