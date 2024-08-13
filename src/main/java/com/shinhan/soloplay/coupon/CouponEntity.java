@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class CouponEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer couponId;
+	private Long couponId;
 	private double discountRate;
 	private int maxDiscount;
 }
