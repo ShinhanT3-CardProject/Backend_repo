@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 public class UserCardEntity {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String cardNum;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

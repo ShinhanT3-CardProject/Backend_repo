@@ -30,7 +30,7 @@ public class ThemeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "THEME_ID")
-    private Integer themeId;
+    private Long themeId;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
