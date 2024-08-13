@@ -25,7 +25,7 @@ public class CardUsageHistoryEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int usageId;
+	private Long usageId;
 	
 	private LocalDateTime transaction_date;
 	private BigDecimal cardType;

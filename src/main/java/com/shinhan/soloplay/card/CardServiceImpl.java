@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 public class CardServiceImpl implements CardService {
 
 	@Autowired
-	CardRepository cardRepo;
+	CardRepository cardRepository;
 	
 	//카드목록 전체조회
 	@Override
 	public List<CardDTO> getList() { 
-		List<CardDTO> cardlist = cardRepo.findAll().stream().map(en->entityToDTO(en))
+		List<CardDTO> cardlist = cardRepository.findAll().stream().map(en->entityToDTO(en))
 				.collect(Collectors.toList());
 		return cardlist;
 	} 

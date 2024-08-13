@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardDTO {
-	private int cardId;
+	private Long cardId;
 	private String cardName;
 	private String cardType;
 	private String cardBenefit;

@@ -21,7 +21,7 @@ public class CardEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cardId;
+	private Long cardId;
 	
 	private String cardName;
 	private String cardType;
