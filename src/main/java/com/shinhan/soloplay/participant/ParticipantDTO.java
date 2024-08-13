@@ -18,5 +18,5 @@ public class ParticipantDTO {
 	int contribution;
 	int attack;
 	Timestamp createTime;
-	Timestamp attackTime;
+
 }
