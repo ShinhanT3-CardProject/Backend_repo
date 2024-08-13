@@ -29,7 +29,7 @@ public class PointEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer pointId;
+	private Long pointId;
 	private String pointName;
 	private int amount;
 	private LocalDateTime createDate;
