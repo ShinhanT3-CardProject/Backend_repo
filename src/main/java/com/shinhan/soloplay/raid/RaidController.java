@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RaidController {
 
-	@GetMapping("/attack/{power}")
+	@GetMapping("/result/{power}")
 	int calculateDamage(@PathVariable int power) {
 		
 		Random random = new Random();
@@ -35,6 +35,9 @@ public class RaidController {
         	}
         }
         
-		return power*multiplier; // 최종 대미지
+        int damage = power * multiplier; // 최종 대미지
+        
+		return damage; 
 	}
+	
 }

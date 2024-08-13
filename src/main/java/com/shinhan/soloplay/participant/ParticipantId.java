@@ -1,7 +1,11 @@
-package com.shinhan.soloplay.raid;
+package com.shinhan.soloplay.participant;
 
 import java.io.Serializable;
 
+import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.user.UserEntity;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -16,7 +20,11 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class ParticipantId implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	@ManyToOne
 	private RaidEntity raidEntity;
 	
+	@ManyToOne
+	private UserEntity userEntity;
 }
