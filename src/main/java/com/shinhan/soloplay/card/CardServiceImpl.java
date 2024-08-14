@@ -11,22 +11,21 @@ public class CardServiceImpl implements CardService {
 
 	@Autowired
 	CardRepository cardRepository;
-	
-	//카드목록 전체조회
+
+	// 카드목록 전체조회
 	@Override
-	public List<CardDTO> getList() { 
-		List<CardDTO> cardlist = cardRepository.findAll().stream().map(en->entityToDTO(en))
+	public List<CardDTO> getList() {
+		List<CardDTO> cardlist = cardRepository.findAll().stream().map(en -> entityToDTO(en))
 				.collect(Collectors.toList());
 		return cardlist;
-	} 
-	
+	}
+
 	// 카드 타입(테마 대분류명)으로 카드들을 조회
-    @Override
-    public List<CardDTO> getCardsByType(String cardType) {
-        List<CardDTO> cardlist = cardRepository.findByCardType(cardType).stream()
-                .map(this::entityToDTO)
-                .collect(Collectors.toList());
-        return cardlist;
-    }
+	@Override
+	public List<CardDTO> getCardsByType(String cardType) {
+		List<CardDTO> cardlist = cardRepository.findByCardType(cardType).stream().map(this::entityToDTO)
+				.collect(Collectors.toList());
+		return cardlist;
+	}
 
 }

@@ -37,5 +37,5 @@ public class CardUsageHistoryEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "card_num")
-	private CardEntity card;
+	private UserCardEntity userCard;
 }
