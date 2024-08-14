@@ -1,5 +1,6 @@
 package com.shinhan.soloplay.user;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,6 +46,27 @@ public class UserEntity {
             this.isActive = true;
         }
         
+    }
+    
+    
+    public static UserEntity fromDTO(UserDTO userDTO) {
+        return UserEntity.builder()
+                .userId(userDTO.getUserId())
+                .userName(userDTO.getUserName())
+                .userPassword(userDTO.getUserPassword())
+                .createDate(userDTO.getCreateDate().toLocalDateTime())
+                .isActive(userDTO.isActive())
+                .build();
+    }
+    
+    public static UserDTO toDTO(UserEntity userEntity) {
+        return UserDTO.builder()
+                .userId(userEntity.getUserId())
+                .userName(userEntity.getUserName())
+                .userPassword(userEntity.getUserPassword())
+                .createDate(Timestamp.valueOf(userEntity.getCreateDate()))
+                .isActive(userEntity.getIsActive())
+                .build();
     }
     
     
