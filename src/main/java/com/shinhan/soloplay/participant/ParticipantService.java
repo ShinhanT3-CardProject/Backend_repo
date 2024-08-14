@@ -14,7 +14,7 @@ public interface ParticipantService {
 	void participate(Long raidId, String userId, int attack);
 	
 	//2.Read
-	List<ParticipantDTO> findAll();
+	List<ParticipantDTO> findByUserId(String userId);
 	ParticipantDTO findById(Long raidId, String userId);
 	
 	//3.Update

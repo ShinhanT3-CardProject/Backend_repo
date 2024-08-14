@@ -18,16 +18,22 @@ public class RaidController {
 	@Autowired
 	ParticipantService participantService;
 
+	//레이드 참가
 	@GetMapping("/participate/{raidId}")
 	void participate(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
 		String userId = (String)httpSession.getAttribute("loginUser");
-		if (participantService.findById(raidId, userId) == null) {
-			participantService.participate(raidId, userId, 100);
+		
+		//공격력 산정 메소드 추가 필요
+		int attack = 100; // attack 값 임의로 100
+		
+		if (participantService.findById(raidId, userId) == null && attack > 0) {
+			participantService.participate(raidId, userId, attack);
 		}else {
-			
+			participantService.addAttack(raidId, userId, attack);
 		}
 	}
 	
+	//레이드 결과 조회
 	@GetMapping("/result/{raidId}")
 	ParticipantDTO result(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
 		String userId = (String)httpSession.getAttribute("loginUser");
