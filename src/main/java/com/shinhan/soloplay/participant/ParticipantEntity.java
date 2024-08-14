@@ -1,6 +1,6 @@
 package com.shinhan.soloplay.participant;
 import java.sql.Timestamp;
-import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +22,6 @@ public class ParticipantEntity {
 	
 	private int contribution;
 	private int attack;
-	@CreationTimestamp
 	private Timestamp createTime;
+
 }
