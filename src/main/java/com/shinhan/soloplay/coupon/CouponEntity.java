@@ -23,5 +23,4 @@ public class CouponEntity {
 	private String couponName;
 	private double discountRate;
 	private int maxDiscount;
-	private String couponName;
 }
