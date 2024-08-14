@@ -14,7 +14,7 @@ public class OpenAIService {
     private final WebClient webClient;
 
     // 미리 정의된 테마들
-    private final List<String> predefinedThemes = List.of(
+    private final List<String> PREDEFINEDTHEMES = List.of(
         "생활",
         "쇼핑",
         "외식/카페",
@@ -32,7 +32,7 @@ public class OpenAIService {
 
     public ThemeResponse getTheme(BucketListRequest request) {
         String prompt = "다음 버킷리스트 항목들을 분석하여 아래 주어진 테마들 중에서 가장 관련성이 높은 테마를 선택하고, 그 이유를 설명해주세요. 테마 추천 결과는 가능한 테마들 중에 선별해서 무조건 테마만 단어 형태로 알려주고, 설명은 전체적인 이유로 답변해주세요. 한국어로 답변해주세요.\n\n" +
-                        "가능한 테마들: " + String.join(", ", predefinedThemes) + "\n\n" +
+                        "가능한 테마들: " + String.join(", ", PREDEFINEDTHEMES) + "\n\n" +
                         "버킷리스트: " + String.join(", ", request.getBucketList());
 
         OpenAIResponse response = webClient.post()
