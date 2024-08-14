@@ -11,14 +11,14 @@ public interface ParticipantService {
 	
 	//CRUD
 	//1.Create
-	void participate(Long raidId, String userId, int attack);
+	void participate(Long raidId, String userId);
 	
 	//2.Read
-	List<ParticipantDTO> findAll();
+	List<ParticipantDTO> findByUserId(String userId);
 	ParticipantDTO findById(Long raidId, String userId);
 	
 	//3.Update
-	void addAttack(Long raidId, String userId, int attackIncrement);
+	void addAttack(Long raidId, String userId);
 	Map<String, Integer> attack(ParticipantDTO dto);
 	
 	//Entity -> DTO

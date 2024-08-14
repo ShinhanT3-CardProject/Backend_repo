@@ -27,6 +27,9 @@ public class MerchantEntity {
 
     @Column(name = "MERCHANT_ADDRESS")
     private String merchantAddress;
+    
+    @Column(name = "MERCHANT_NAME")
+    private String merchantName;
 
     @ManyToOne
     @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
