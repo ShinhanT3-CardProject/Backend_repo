@@ -29,7 +29,7 @@ public class MerchantEntity {
     private String merchantAddress;
 
     @ManyToOne
-    @JoinColumn(name = "THEME_SUB_CATEGORY_NAME")
+    @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
     private SubCategoryEntity subCategory;
     
 }
