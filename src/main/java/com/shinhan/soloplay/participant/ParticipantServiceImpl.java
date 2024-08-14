@@ -136,8 +136,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 		String merchantId = "1"; //raidRepository.findMerchantIdById(raidId);
 		
 		Timestamp startTime = participantRepository.findById(participantId)
-			    .map(participant -> participant.getCreateTime()) // 참가자의 생성 시간을 가져옴
-			    .orElse(new Timestamp(System.currentTimeMillis())); // 참가자가 없을 경우 현재 시간으로 설정
+				//참가자의 생성 시간을 가져옴
+			    .map(participant -> participant.getCreateTime()) 
+			    //참가자가 없을 경우 현재 시간으로 설정
+			    .orElse(new Timestamp(System.currentTimeMillis())); 
 		
 		Timestamp endTime = new Timestamp(System.currentTimeMillis());//raidRepository.findEndTimeByRaidId(raidId);
 		
@@ -150,16 +152,17 @@ public class ParticipantServiceImpl implements ParticipantService {
 		Random random = new Random();
 	
 	    //두 개의 주사위를 굴립니다.
-	    int dice1 = random.nextInt(6) + 1;  //1부터 6까지의 무작위 숫자
-	    int dice2 = random.nextInt(6) + 1;  //1부터 6까지의 무작위 숫자
+	    int dice1 = random.nextInt(6) + 1;
+	    int dice2 = random.nextInt(6) + 1;
 	        
-	    int multiplier = 1; //공격 배수
+	    //공격 배수
+	    int multiplier = 1; 
 	        
 	    if (dice1 == dice2) {
 	    	if (dice1 == 6) {
-	        	multiplier = 3; //12가 나오면 3배수
+	        	multiplier = 3;
 	        }else if (dice1 == 1) {
-	        	multiplier = 0; //2가 나오면 미스
+	        	multiplier = 0;
 	        }else {
 	        	multiplier = 2;
 	        }
@@ -168,7 +171,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 	    result.put("dice1", dice1);
 	    result.put("dice2", dice2);
 	    
-	    int damage = attack * multiplier; //최종 대미지
+	    int damage = attack * multiplier;
 	    result.put("damage", damage);
 	        
 		return result; 

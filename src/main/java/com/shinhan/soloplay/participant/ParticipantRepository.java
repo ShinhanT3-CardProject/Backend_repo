@@ -11,6 +11,4 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
 	@Query("SELECT p FROM ParticipantEntity p WHERE p.participantId.userEntity.id = :userId")
 	List<ParticipantEntity> findByUserId(@Param("userId") String userId);
 	
-	
-
 }
