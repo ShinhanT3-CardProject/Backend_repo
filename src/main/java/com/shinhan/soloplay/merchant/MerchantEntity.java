@@ -22,14 +22,14 @@ import lombok.NoArgsConstructor;
 public class MerchantEntity {
 
     @Id
-    @Column(name = "MERCHANT_ID", nullable = false)
+    @Column(name = "MERCHANT_ID")
     private String merchantId;
 
-    @Column(name = "MERCHANT_ADDRESS", nullable = false)
+    @Column(name = "MERCHANT_ADDRESS")
     private String merchantAddress;
 
     @ManyToOne
-    @JoinColumn(name = "THEME_SUB_CATEGORY_NAME")
+    @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
     private SubCategoryEntity subCategory;
     
 }
