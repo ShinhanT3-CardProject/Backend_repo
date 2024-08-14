@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDTO {
 	private String userId;
+	private String userPassword;
+	private String userName;
 	private Timestamp createDate;
 	private boolean isActive;
-	private String userName;
-	private String userPassword;
 	
 	public static UserEntity toEntity(UserDTO userDTO) {
 	    return UserEntity.builder()

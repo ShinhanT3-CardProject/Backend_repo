@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.user.UserDTO;
 import com.shinhan.soloplay.user.UserEntity;
 import com.shinhan.soloplay.user.UserRepository;
 
@@ -38,15 +39,8 @@ public class AuthService implements UserDetailsService{
 	}
 	
 	@Transactional
-	public boolean join (String userId , String userPassword) {
-		
-		UserEntity joinUser = UserEntity.builder()
-										.userId(userId)
-										.userPassword(userPassword)
-										.createDate(null)
-										.isActive(true)
-										.build();
-		userRepository.save(joinUser);
+	public boolean signUp (UserDTO signUpUser) {
+		userRepository.save(UserDTO.toEntity(signUpUser));
 		return true;
 	}
 

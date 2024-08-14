@@ -25,12 +25,22 @@ public class SecurityConfig {
     }
     
     
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
-				.configurationSource(corsConfigurationSource()));
-		return http.build();
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(httpSecurityCorsConfigurer -> 
+                httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource())
+            )
+            .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
+            .authorizeHttpRequests(auth -> 
+                auth.anyRequest().permitAll() // 모든 요청에 대해 permitAll
+            )
+            .formLogin(form -> form.disable()) // 폼 로그인 비활성화
+            .logout(logout -> logout.disable()); // 로그아웃 비활성화
+        
+
+        return http.build();
+    }
 	
 	
     @Bean
