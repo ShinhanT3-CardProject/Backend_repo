@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface CardUsageHistoryRepository extends JpaRepository<CardUsageHistoryEntity, Long>{
 
+public interface CardUsageHistoryRepository extends JpaRepository<CardUsageHistoryEntity, Long> {
+    List<CardUsageHistoryEntity> findByUserCard_CardNum(String cardNum);
+  
 	@Query("SELECT SUM(cuh.amount) "
 			+ "FROM CardUsageHistoryEntity cuh "
 			+ "where cuh.userCard.cardNum IN ?1 "
