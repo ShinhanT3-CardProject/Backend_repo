@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.participant;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.card.CardUsageHistoryRepository;
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -19,10 +21,13 @@ import lombok.RequiredArgsConstructor;
 public class ParticipantServiceImpl implements ParticipantService {
 
 	final ParticipantRepository participantRepository;
+//	final RaidRepository raidRepository;
+	final CardUsageHistoryRepository cardUsageHistoryRepository;
 
 	//레이드 참가(Create)
 	@Override
-	public void participate(Long raidId, String userId, int attack) {
+	public void participate(Long raidId, String userId) {
+		int attack = calculateAttack(userId, raidId);
 		ParticipantDTO participantDTO = ParticipantDTO.builder()
 				.raidId(raidId)
 				.userId(userId)
@@ -63,7 +68,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 	
 	//레이드 추가 공격(Update)
 	@Override
-	public void addAttack(Long raidId, String userId, int attackIncrement) {
+	public void addAttack(Long raidId, String userId) {
+		int attackIncrement = calculateAttack(userId, raidId);
 		RaidEntity raidEntity = RaidEntity.builder()
 				.raidId(raidId)
 				.build();
@@ -111,6 +117,31 @@ public class ParticipantServiceImpl implements ParticipantService {
 	            return result;
 	        })
 	        .orElse(null);
+	}
+	
+	//공격력 계산 메소드
+	private int calculateAttack(String userId, Long raidId) {
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(raidId)
+				.build();
+		UserEntity userEntity = UserEntity.builder()
+				.userId(userId)
+				.build();
+		ParticipantId participantId = ParticipantId.builder()
+				.raidEntity(raidEntity)
+				.userEntity(userEntity)
+				.build();
+		
+		List<String> cardNumList = new ArrayList<>(); //userCardRepository.findCardNumByUserId(userId);
+		String merchantId = "1"; //raidRepository.findMerchantIdById(raidId);
+		
+		Timestamp startTime = participantRepository.findById(participantId)
+			    .map(participant -> participant.getCreateTime()) // 참가자의 생성 시간을 가져옴
+			    .orElse(new Timestamp(System.currentTimeMillis())); // 참가자가 없을 경우 현재 시간으로 설정
+		
+		Timestamp endTime = new Timestamp(System.currentTimeMillis());//raidRepository.findEndTimeByRaidId(raidId);
+		
+		return cardUsageHistoryRepository.calculateAttack(cardNumList, merchantId, startTime, endTime);
 	}
 
 	//난수로 최종 대미지 결정

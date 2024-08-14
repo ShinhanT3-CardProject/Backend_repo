@@ -28,7 +28,7 @@ public class CardUsageHistoryEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long usageId;
 	
-	private Timestamp transaction_date;
+	private Timestamp transactionDate;
 	private int amount;
 	
 	@ManyToOne
@@ -37,5 +37,5 @@ public class CardUsageHistoryEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "card_num")
-	private CardEntity card;
+	private UserCardEntity userCard;
 }
