@@ -1,5 +1,7 @@
 package com.shinhan.soloplay.raid;
 
-public interface RaidRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RaidRepository extends JpaRepository<RaidEntity, Long>{
 
 }
