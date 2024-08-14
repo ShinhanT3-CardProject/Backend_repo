@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.participant;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.card.CardUsageHistoryRepository;
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -19,9 +21,13 @@ import lombok.RequiredArgsConstructor;
 public class ParticipantServiceImpl implements ParticipantService {
 
 	final ParticipantRepository participantRepository;
+//	final RaidRepository raidRepository;
+	final CardUsageHistoryRepository cardUsageHistoryRepository;
 
+	//레이드 참가(Create)
 	@Override
-	public void participate(Long raidId, String userId, int attack) {
+	public void participate(Long raidId, String userId) {
+		int attack = calculateAttack(userId, raidId);
 		ParticipantDTO participantDTO = ParticipantDTO.builder()
 				.raidId(raidId)
 				.userId(userId)
@@ -31,9 +37,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 		participantRepository.save(participantEntity);
 	}
 	
+	//유저의 레이드 내역 조회(Read)
 	@Override
-	public List<ParticipantDTO> findAll() {
-		List<ParticipantEntity> participantEntityList = (List<ParticipantEntity>)participantRepository.findAll();
+	public List<ParticipantDTO> findByUserId(String userId) {
+		List<ParticipantEntity> participantEntityList = participantRepository.findByUserId(userId);
 		List<ParticipantDTO> participantDTOList = 
 				participantEntityList.stream()
 					.map(participantEntity -> entityToDTO(participantEntity))
@@ -41,6 +48,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 		return participantDTOList;
 	}
 
+	//레이드 결과 조회(Read)
 	@Override
 	public ParticipantDTO findById(Long raidId, String userId) {
 		RaidEntity raidEntity = RaidEntity.builder()
@@ -58,8 +66,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 		return entityToDTO(participantEntity);
 	}
 	
+	//레이드 추가 공격(Update)
 	@Override
-	public void addAttack(Long raidId, String userId, int attackIncrement) {
+	public void addAttack(Long raidId, String userId) {
+		int attackIncrement = calculateAttack(userId, raidId);
 		RaidEntity raidEntity = RaidEntity.builder()
 				.raidId(raidId)
 				.build();
@@ -78,6 +88,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 			});
 	}
 
+	//레이드 공격 실행(Update)
 	@Override
 	public Map<String, Integer> attack(ParticipantDTO participantDTO) {
 		RaidEntity raidEntity = RaidEntity.builder()
@@ -107,23 +118,51 @@ public class ParticipantServiceImpl implements ParticipantService {
 	        })
 	        .orElse(null);
 	}
-
 	
+	//공격력 계산 메소드
+	private int calculateAttack(String userId, Long raidId) {
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(raidId)
+				.build();
+		UserEntity userEntity = UserEntity.builder()
+				.userId(userId)
+				.build();
+		ParticipantId participantId = ParticipantId.builder()
+				.raidEntity(raidEntity)
+				.userEntity(userEntity)
+				.build();
+		
+		List<String> cardNumList = new ArrayList<>(); //userCardRepository.findCardNumByUserId(userId);
+		String merchantId = "1"; //raidRepository.findMerchantIdById(raidId);
+		
+		Timestamp startTime = participantRepository.findById(participantId)
+				//참가자의 생성 시간을 가져옴
+			    .map(participant -> participant.getCreateTime()) 
+			    //참가자가 없을 경우 현재 시간으로 설정
+			    .orElse(new Timestamp(System.currentTimeMillis())); 
+		
+		Timestamp endTime = new Timestamp(System.currentTimeMillis());//raidRepository.findEndTimeByRaidId(raidId);
+		
+		return cardUsageHistoryRepository.calculateAttack(cardNumList, merchantId, startTime, endTime);
+	}
+
+	//난수로 최종 대미지 결정
 	private Map<String, Integer> calculateDamage(int attack) {	
 		Map<String, Integer> result = new HashMap<>();
 		Random random = new Random();
 	
-	    // 두 개의 주사위를 굴립니다.
-	    int dice1 = random.nextInt(6) + 1;  // 1부터 6까지의 무작위 숫자
-	    int dice2 = random.nextInt(6) + 1;  // 1부터 6까지의 무작위 숫자
+	    //두 개의 주사위를 굴립니다.
+	    int dice1 = random.nextInt(6) + 1;
+	    int dice2 = random.nextInt(6) + 1;
 	        
-	    int multiplier = 1; // 공격 배수
+	    //공격 배수
+	    int multiplier = 1; 
 	        
 	    if (dice1 == dice2) {
 	    	if (dice1 == 6) {
-	        	multiplier = 3; // 12가 나오면 3배수
+	        	multiplier = 3;
 	        }else if (dice1 == 1) {
-	        	multiplier = 0; // 2가 나오면 미스
+	        	multiplier = 0;
 	        }else {
 	        	multiplier = 2;
 	        }
@@ -132,7 +171,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 	    result.put("dice1", dice1);
 	    result.put("dice2", dice2);
 	    
-	    int damage = attack * multiplier; // 최종 대미지
+	    int damage = attack * multiplier;
 	    result.put("damage", damage);
 	        
 		return result; 
