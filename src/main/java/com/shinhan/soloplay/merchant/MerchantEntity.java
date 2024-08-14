@@ -28,11 +28,8 @@ public class MerchantEntity {
     @Column(name = "MERCHANT_ADDRESS", nullable = false)
     private String merchantAddress;
 
-    @Column(name = "SUB_CATEGORY_ID", nullable = false)
-    private Integer subCategoryId;
-    
     @ManyToOne
-    @JoinColumn(name = "themeSubCategoryId")
+    @JoinColumn(name = "THEME_SUB_CATEGORY_NAME")
     private SubCategoryEntity subCategory;
     
 }

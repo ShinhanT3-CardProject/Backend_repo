@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,7 +33,7 @@ public class PointEntity {
 	private int isAdd;
 	private LocalDateTime deadDate;
 	private int category;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id", nullable = false)
 	private UserEntity user;
