@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface MainCategoryRepository3 extends CrudRepository<MainCategoryEntity, Long> {
+public interface MainCategoryRepositoryYJ extends CrudRepository<MainCategoryEntity, Long> {
 	 
 	 
 	  @Query("SELECT mc.themeMainCategoryName FROM MainCategoryEntity mc " +

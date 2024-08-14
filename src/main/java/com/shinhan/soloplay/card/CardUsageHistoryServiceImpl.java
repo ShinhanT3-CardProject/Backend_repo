@@ -22,7 +22,7 @@ public class CardUsageHistoryServiceImpl implements CardUsageHistoryService {
 	    private CardUsageHistoryDTO entityToDTO(CardUsageHistoryEntity entity) {
 	        return CardUsageHistoryDTO.builder()
 	                .usageId(entity.getUsageId())
-	                .transactionDate(entity.getTransaction_date())
+	                .transactionDate(entity.getTransactionDate())
 	                .amount(entity.getAmount())
 	                .cardNum(entity.getUserCard().getCardNum())
 	                .build();

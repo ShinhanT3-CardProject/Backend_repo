@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MainCategoryServiceImpl3 implements MainCategoryService3 {
+public class MainCategoryServiceImplYJ implements MainCategoryService3 {
 
     @Autowired
-    private MainCategoryRepository3 mainCategoryRepository;
+    private MainCategoryRepositoryYJ mainCategoryRepository;
 
     @Override
     public List<String> getMainCategoryNameByUserId(String userId) { 
