@@ -19,5 +19,14 @@ public class CardServiceImpl implements CardService {
 				.collect(Collectors.toList());
 		return cardlist;
 	} 
+	
+	// 카드 타입(테마 대분류명)으로 카드들을 조회
+    @Override
+    public List<CardDTO> getCardsByType(String cardType) {
+        List<CardDTO> cardlist = cardRepository.findByCardType(cardType).stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+        return cardlist;
+    }
 
 }

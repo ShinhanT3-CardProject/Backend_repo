@@ -7,6 +7,9 @@ public interface CardService {
 	//전체 카드목록 조회
 	List<CardDTO> getList();
 	
+	// 카드 타입(테마 대분류명)으로 카드들을 조회
+    List<CardDTO> getCardsByType(String cardType);
+	
 	//동적 SQL만들기
 	
 	//Entity to DTO
