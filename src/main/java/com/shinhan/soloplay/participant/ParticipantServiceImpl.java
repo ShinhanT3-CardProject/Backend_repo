@@ -1,7 +1,6 @@
 package com.shinhan.soloplay.participant;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.card.CardUsageHistoryRepository;
+import com.shinhan.soloplay.card.UserCardEntity;
+import com.shinhan.soloplay.card.UserCardRepository;
+import com.shinhan.soloplay.merchant.MerchantEntity;
 import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.raid.RaidRepository;
 import com.shinhan.soloplay.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +24,9 @@ import lombok.RequiredArgsConstructor;
 public class ParticipantServiceImpl implements ParticipantService {
 
 	final ParticipantRepository participantRepository;
-//	final RaidRepository raidRepository;
+	final RaidRepository raidRepository;
 	final CardUsageHistoryRepository cardUsageHistoryRepository;
+	final UserCardRepository userCardRepository;
 
 	//레이드 참가(Create)
 	@Override
@@ -132,16 +136,27 @@ public class ParticipantServiceImpl implements ParticipantService {
 				.userEntity(userEntity)
 				.build();
 		
-		List<String> cardNumList = new ArrayList<>(); //userCardRepository.findCardNumByUserId(userId);
-		String merchantId = "1"; //raidRepository.findMerchantIdById(raidId);
+		List<String> cardNumList = userCardRepository.findByUserUserId(userId)
+			    .stream()
+			    .map(UserCardEntity::getCardNum)
+			    .collect(Collectors.toList());
+		
+		String merchantId = raidRepository.findById(raidId)
+			    .map(RaidEntity::getMerchant)
+			    .map(MerchantEntity::getMerchantId)
+			    .orElse(null);
 		
 		Timestamp startTime = participantRepository.findById(participantId)
-				//참가자의 생성 시간을 가져옴
+				//참가자의 참가 시간을 가져옴
 			    .map(participant -> participant.getCreateTime()) 
-			    //참가자가 없을 경우 현재 시간으로 설정
-			    .orElse(new Timestamp(System.currentTimeMillis())); 
+			    //참가자가 없을 경우 레이드의 시작 시간을 가져옴
+			    .orElse(raidRepository.findById(raidId)
+						.map(RaidEntity::getStartTime)
+						.orElse(null)); 
 		
-		Timestamp endTime = new Timestamp(System.currentTimeMillis());//raidRepository.findEndTimeByRaidId(raidId);
+		Timestamp endTime = raidRepository.findById(raidId)
+				.map(RaidEntity::getEndTime)
+				.orElse(null);
 		
 		return cardUsageHistoryRepository.calculateAttack(cardNumList, merchantId, startTime, endTime);
 	}
