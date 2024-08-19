@@ -30,29 +30,29 @@ public class OpenAIService {
             .build();
     }
 
-    public ThemeResponse getTheme(BucketListRequest request) {
+    public ThemeResponseDTO getTheme(BucketListRequestDTO request) {
         String prompt = "다음 버킷리스트 항목들을 분석하여 아래 주어진 테마들 중에서 가장 관련성이 높은 테마를 선택하고, 그 이유를 설명해주세요. 테마 추천 결과는 가능한 테마들 중에 선별해서 무조건 테마만 단어 형태로 알려주고, 설명은 전체적인 이유로 답변해주세요. 한국어로 답변해주세요.\n\n" +
                         "가능한 테마들: " + String.join(", ", PREDEFINEDTHEMES) + "\n\n" +
                         "버킷리스트: " + String.join(", ", request.getBucketList());
 
-        OpenAIResponse response = webClient.post()
+        OpenAIResponseDTO response = webClient.post()
             .uri("/chat/completions")
             .bodyValue(createOpenAIRequest(prompt))
             .retrieve()
-            .bodyToMono(OpenAIResponse.class)
+            .bodyToMono(OpenAIResponseDTO.class)
             .block();
 
         return extractThemeFromResponse(response);
     }
 
-    private OpenAIRequest createOpenAIRequest(String prompt) {
-        OpenAIRequest request = new OpenAIRequest();
+    private OpenAIRequestDTO createOpenAIRequest(String prompt) {
+        OpenAIRequestDTO request = new OpenAIRequestDTO();
         request.setModel("gpt-4o-mini"); // 사용하고 있는 모델에 따라 변경
-        request.setMessages(List.of(new OpenAIRequest.Message("user", prompt)));
+        request.setMessages(List.of(new OpenAIRequestDTO.Message("user", prompt)));
         return request;
     }
 
-    private ThemeResponse extractThemeFromResponse(OpenAIResponse response) {
+    private ThemeResponseDTO extractThemeFromResponse(OpenAIResponseDTO response) {
         if (response != null && !response.getChoices().isEmpty()) {
             String content = response.getChoices().get(0).getMessage().getContent().trim();
 
@@ -69,8 +69,8 @@ public class OpenAIService {
                 details = List.of("세부 설명이 제공되지 않았습니다.");
             }
 
-            return new ThemeResponse(theme, details);
+            return new ThemeResponseDTO(theme, details);
         }
-        return new ThemeResponse("알 수 없음", List.of("테마를 분석할 수 없습니다."));
+        return new ThemeResponseDTO("알 수 없음", List.of("테마를 분석할 수 없습니다."));
     }
 }

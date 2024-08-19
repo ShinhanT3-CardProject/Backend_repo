@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThemeResponse {
-    private String theme;
-    private List<String> details;
+public class BucketListRequestDTO {
+    private List<String> bucketList;
 }

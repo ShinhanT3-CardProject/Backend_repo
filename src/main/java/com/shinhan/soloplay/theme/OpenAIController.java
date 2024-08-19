@@ -18,7 +18,7 @@ public class OpenAIController {
     }
 
     @PostMapping("/analyze")
-    public ThemeResponse analyzeTheme(@RequestBody BucketListRequest request) {
+    public ThemeResponseDTO analyzeTheme(@RequestBody BucketListRequestDTO request) {
         return openAIService.getTheme(request);
     }
 }
