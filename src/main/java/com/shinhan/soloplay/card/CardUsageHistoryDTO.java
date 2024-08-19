@@ -16,4 +16,5 @@ public class CardUsageHistoryDTO {
     private Timestamp transactionDate;
     private int amount; 
     private String cardNum;
+    private String merchantName; // 가맹점 이름 추가 
 }

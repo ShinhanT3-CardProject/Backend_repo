@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.card;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,12 @@ public class CardServiceImpl implements CardService {
 				.collect(Collectors.toList());
 		return cardlist;
 	}
+	
+    // 카드 ID로 카드 이름 조회
+    @Override
+    public String getCardNameById(Long cardId) {
+        Optional<CardEntity> cardEntity = cardRepository.findById(cardId);
+        return cardEntity.map(CardEntity::getCardName).orElse(null);
+    }
 
 }

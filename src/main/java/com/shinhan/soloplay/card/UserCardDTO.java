@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class UserCardDTO {
     private String cardNum;
     private Long cardId;
-    private String userId;
+    private String userId;  
 }
