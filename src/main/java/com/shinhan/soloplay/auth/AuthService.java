@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.user.UserDTO;
@@ -19,6 +20,9 @@ public class AuthService implements UserDetailsService{
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 	
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -39,9 +43,19 @@ public class AuthService implements UserDetailsService{
 	}
 	
 	@Transactional
-	public boolean signUp (UserDTO signUpUser) {
-		userRepository.save(UserDTO.toEntity(signUpUser));
-		return true;
-	}
+	public int signUp(UserDTO signUpUser) {
+	    if (userRepository.findById(signUpUser.getUserId()).isPresent()) {
+	        return -1; // 이미 존재하는 유저 (중복)
+	    }
 
+	    try {
+	        signUpUser.setUserPassword(passwordEncoder.encode(signUpUser.getUserPassword()));
+	        UserEntity user = UserEntity.fromDTO(signUpUser);
+	        user.setIsActive(true);
+	        userRepository.save(user);
+	        return 1; // 회원가입 성공
+	    } catch (Exception e) {
+	        return 0; // 기타 회원가입 실패
+	    }
+	}
 }
