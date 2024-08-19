@@ -10,6 +10,9 @@ public interface CardService {
 	// 카드 타입(테마 대분류명)으로 카드들을 조회
 	List<CardDTO> getCardsByType(String cardType);  
 	
+	 // 카드 ID로 카드 이름 조회
+    String getCardNameById(Long cardId);
+	
 	// Entity to DTO
 	default CardDTO entityToDTO(CardEntity entity) {
 		CardDTO dto = CardDTO.builder().cardId(entity.getCardId()).cardName(entity.getCardName())

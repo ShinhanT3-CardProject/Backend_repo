@@ -37,7 +37,7 @@ public class CardController {
 	}
 
 	// 추천 카드
-	@GetMapping("/cardsByUserTheme")
+	@GetMapping("/cardRecommend")
 	public Map<String, List<CardDTO>> getCardsByUserTheme(@RequestParam String userId) {
 		Map<String, List<CardDTO>> result = new HashMap<>();
 
@@ -56,21 +56,30 @@ public class CardController {
 		return result; // 테마명과 카드 리스트를 함께 반환
 	}
 
-	// 사용자 소지 카드 및 사용 내역
 	@GetMapping("/userCardsAndUsageHistory")
-	public Map<String, List<CardUsageHistoryDTO>> getUserCardsAndUsageHistory(@RequestParam String userId) {
-		Map<String, List<CardUsageHistoryDTO>> result = new HashMap<>();
+	public Map<String, Map<String, Object>> getUserCardsAndUsageHistory(@RequestParam String userId) {
+	    Map<String, Map<String, Object>> result = new HashMap<>();
 
-		// 1. 사용자 소지 카드 목록
-		List<UserCardDTO> userCards = userCardService.getUserCardsByUserId(userId);
+	    // 1. 사용자 소지 카드 목록
+	    List<UserCardDTO> userCards = userCardService.getUserCardsByUserId(userId);
 
-		// 2. 각 카드의 사용 내역
-		for (UserCardDTO userCard : userCards) {
-			List<CardUsageHistoryDTO> usageHistory = cardUsageHistoryService
-					.getCardUsageHistoryByCardNum(userCard.getCardNum());
-			result.put(userCard.getCardNum(), usageHistory);
-		}
+	    // 2. 각 카드의 사용 내역 및 카드 이름을 함께 포함
+	    for (UserCardDTO userCard : userCards) {
+	        Map<String, Object> cardData = new HashMap<>();
 
-		return result;
-	}
+	        // 카드 사용 내역 추가
+	        List<CardUsageHistoryDTO> usageHistory = cardUsageHistoryService.getCardUsageHistoryByCardNum(userCard.getCardNum());
+	        cardData.put("usageHistory", usageHistory);
+
+	        // 카드 이름 추가
+	        String cardName = cardService.getCardNameById(userCard.getCardId());
+	        cardData.put("cardName", cardName);
+
+	        // 카드번호와 해당 데이터를 결과에 포함시킴
+	        result.put(userCard.getCardNum(), cardData);
+	    }
+
+	    return result; 
+
+   }  
 }

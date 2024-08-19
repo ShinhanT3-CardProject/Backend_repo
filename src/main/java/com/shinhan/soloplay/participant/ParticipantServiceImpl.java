@@ -136,7 +136,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 				.userEntity(userEntity)
 				.build();
 		
-		List<String> cardNumList = userCardRepository.findByUserUserId(userId)
+		List<String> cardNumList = userCardRepository.findByUser(userEntity)
 			    .stream()
 			    .map(UserCardEntity::getCardNum)
 			    .collect(Collectors.toList());

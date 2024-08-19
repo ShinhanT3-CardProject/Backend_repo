@@ -8,7 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 
 
 public interface CardUsageHistoryRepository extends JpaRepository<CardUsageHistoryEntity, Long> {
-    List<CardUsageHistoryEntity> findByUserCard_CardNum(String cardNum);
+	@Query("SELECT new com.shinhan.soloplay.card.CardUsageHistoryDTO(cuh.usageId, cuh.transactionDate, cuh.amount, cuh.userCard.cardNum, m.merchantName) " +
+		       "FROM CardUsageHistoryEntity cuh " +
+		       "JOIN cuh.merchant m " +
+		       "JOIN cuh.userCard uc " + 
+		       "WHERE cuh.userCard.cardNum = :cardNum")
+		List<CardUsageHistoryDTO> findByUserCard_CardNum(String cardNum);
+
   
 	@Query("SELECT SUM(cuh.amount) "
 			+ "FROM CardUsageHistoryEntity cuh "

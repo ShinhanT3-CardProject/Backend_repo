@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.user.UserEntity;
+
 @Service
 public class UserCardServiceImpl implements UserCardService {
 
@@ -14,7 +16,8 @@ public class UserCardServiceImpl implements UserCardService {
 
 	@Override
     public List<UserCardDTO> getUserCardsByUserId(String userId) {
-        return userCardRepository.findByUserUserId(userId).stream()
+		UserEntity user = UserEntity.builder().userId(userId).build();
+        return userCardRepository.findByUser(user).stream()
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
     }
