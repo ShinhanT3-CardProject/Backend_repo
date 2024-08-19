@@ -46,8 +46,11 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류.");
         }
     }
-    @PostMapping("/signUp")
-    public ResponseEntity<String> signUp(@RequestBody UserDTO signUpUser) {
+    
+    @PostMapping("/registration")
+    public ResponseEntity<String> registration(@RequestBody UserDTO signUpUser) {
+    	System.out.println(signUpUser);
+    	System.out.println(signUpUser);
         boolean isSignUpSuccessful = authService.signUp(signUpUser);
         
         if (isSignUpSuccessful) {

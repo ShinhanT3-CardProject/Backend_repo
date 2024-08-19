@@ -40,7 +40,8 @@ public class AuthService implements UserDetailsService{
 	
 	@Transactional
 	public boolean signUp (UserDTO signUpUser) {
-		userRepository.save(UserDTO.toEntity(signUpUser));
+		System.out.println("sssssssssssss");
+		userRepository.save(UserEntity.fromDTO(signUpUser));
 		return true;
 	}
 

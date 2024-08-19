@@ -54,7 +54,9 @@ public class UserEntity {
                 .userId(userDTO.getUserId())
                 .userName(userDTO.getUserName())
                 .userPassword(userDTO.getUserPassword())
-                .createDate(userDTO.getCreateDate().toLocalDateTime())
+                .createDate(userDTO.getCreateDate() != null 
+                            ? userDTO.getCreateDate().toLocalDateTime() 
+                            : LocalDateTime.now())  // createDate가 null이면 현재 시각을 사용
                 .isActive(userDTO.isActive())
                 .build();
     }
