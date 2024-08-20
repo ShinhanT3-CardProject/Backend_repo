@@ -2,7 +2,7 @@ package com.shinhan.soloplay.theme;
 
 import java.util.List;
 
-import com.shinhan.soloplay.theme.OpenAIRequest.Message;
+import com.shinhan.soloplay.theme.OpenAIRequestDTO.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenAIResponse {
+public class OpenAIResponseDTO {
     private List<Choice> choices;
 
     @Getter@Setter

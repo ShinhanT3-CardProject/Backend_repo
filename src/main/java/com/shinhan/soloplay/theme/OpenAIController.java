@@ -1,9 +1,12 @@
 package com.shinhan.soloplay.theme;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +21,12 @@ public class OpenAIController {
     }
 
     @PostMapping("/analyze")
-    public ThemeResponse analyzeTheme(@RequestBody BucketListRequest request) {
+    public ThemeResponseDTO analyzeTheme(@RequestBody BucketListRequestDTO request) {
         return openAIService.getTheme(request);
+    }
+    
+    @PostMapping("/recommend")
+    public SubCategoryDTO recommendSubcategories(@RequestBody ThemeResponseDTO themeResponse) {
+        return openAIService.getRecommendedSubcategories(themeResponse.getTheme(), themeResponse.getDetails());
     }
 }

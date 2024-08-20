@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenAIRequest {
+public class OpenAIRequestDTO {
     private String model;
     private List<Message> messages;
 
