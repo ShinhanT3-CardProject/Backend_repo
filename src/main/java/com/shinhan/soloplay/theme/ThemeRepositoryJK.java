@@ -1,5 +1,5 @@
 package com.shinhan.soloplay.theme;
 
-public interface ThemeRepository2 {
+public interface ThemeRepositoryJK {
 
 }
