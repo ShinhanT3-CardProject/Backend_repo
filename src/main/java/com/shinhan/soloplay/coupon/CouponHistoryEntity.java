@@ -33,11 +33,11 @@ public class CouponHistoryEntity {
 	private int isUsed;
 	private LocalDateTime expirationDate;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id",nullable = false)
     private CouponEntity coupon;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",nullable = false)
 	private UserEntity user;
 }
