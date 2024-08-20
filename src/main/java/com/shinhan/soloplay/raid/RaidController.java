@@ -1,14 +1,18 @@
 package com.shinhan.soloplay.raid;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinhan.soloplay.participant.ParticipantDTO;
-import com.shinhan.soloplay.participant.ParticipantService;
+import com.shinhan.soloplay.card.CardUsageHistoryDTO;
+import com.shinhan.soloplay.card.CardUsageHistoryService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -16,24 +20,22 @@ import jakarta.servlet.http.HttpSession;
 public class RaidController {
 	
 	@Autowired
-	ParticipantService participantService;
-
-	//레이드 참가
-	@GetMapping("/participate/{raidId}")
-	void participate(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
-		String userId = (String)httpSession.getAttribute("loginUser");
-		
-		if (participantService.findById(raidId, userId) == null) {
-			participantService.participate(raidId, userId);
-		}else {
-			participantService.addAttack(raidId, userId);
-		}
-	}
+	CardUsageHistoryService cardUsageHistoryService;
 	
-	//레이드 결과 조회
-	@GetMapping("/result/{raidId}")
-	ParticipantDTO result(@PathVariable("raidId") Long raidId, HttpSession httpSession) {
+	@GetMapping("/battle")
+	public Map<String, Object> battleDisplay(@RequestBody Map<String, Long> requestBody, HttpSession httpSession) {
 		String userId = (String)httpSession.getAttribute("loginUser");
-		return participantService.findById(raidId, userId);
+		Long raidId = requestBody.get("raidId");
+		Long usageId = requestBody.getOrDefault("usageId", 0L);
+		int amount = 0;
+		
+		List<CardUsageHistoryDTO> cardUsageHistoryList = cardUsageHistoryService.findByRaid(raidId, usageId);
+		
+		Map<String, Object> responseBody = new HashMap<>();
+		responseBody.put("raidHistory", cardUsageHistoryList);
+		responseBody.put("userAmount", amount);
+		
+		return responseBody;
 	}
+
 }
