@@ -20,7 +20,8 @@ public class CouponHistoryServiceImpl implements CouponHistoryService {
 	
 	@Autowired
 	private CouponRepository couponRepository;
-
+	
+	//쿠폰 만료일 2주 뒤로 설정
 	@Override
 	@Transactional
 	public CouponHistoryEntity createCouponHistory(CouponEntity coupon, UserEntity user) {
@@ -35,12 +36,14 @@ public class CouponHistoryServiceImpl implements CouponHistoryService {
 
         return couponHistoryRepository.save(couponHistory);
 	}
-
+	
+	// user가 보유한 사용 가능 쿠폰 기록 
 	@Override
 	public List<CouponHistoryEntity> getCouponHistoriesByUser(UserEntity user) {
         return couponHistoryRepository.findByUserAndIsUsed(user, 0);
     }
-
+	
+	// 사용한 내역을 '사용됨'으로 업데이트 
 	@Override
 	@Transactional
     public CouponHistoryEntity markCouponAsUsed(Long couponHistoryId) {
