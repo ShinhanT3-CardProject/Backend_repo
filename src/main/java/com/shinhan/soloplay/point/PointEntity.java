@@ -1,6 +1,8 @@
 package com.shinhan.soloplay.point;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -29,12 +31,12 @@ public class PointEntity {
 	private Long pointId;
 	private String pointName;
 	private int amount;
-	private LocalDateTime createDate;
+	@CreationTimestamp
+	private Timestamp createDate;
 	private int isAdd;
-	private LocalDateTime deadDate;
 	private int category;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id", nullable = false)
 	private UserEntity user;
 	
