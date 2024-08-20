@@ -1,7 +1,6 @@
 package com.shinhan.soloplay.participant;
 
 import java.util.List;
-import java.util.Map;
 
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.user.UserEntity;
@@ -15,20 +14,15 @@ public interface ParticipantService {
 	
 	//2.Read
 	List<ParticipantDTO> findByUserId(String userId);
-	ParticipantDTO findById(Long raidId, String userId);
-	
-	//3.Update
-	void addAttack(Long raidId, String userId);
-	Map<String, Integer> attack(ParticipantDTO dto);
+	ParticipantDTO findById(Long raidId, String userId);	
 	
 	//Entity -> DTO
 	default ParticipantDTO entityToDTO(ParticipantEntity participantEntity) {
 		ParticipantDTO participantDTO = ParticipantDTO.builder()
-				.raidId(participantEntity.getParticipantId().getRaidEntity().getRaidId())
-				.userId(participantEntity.getParticipantId().getUserEntity().getUserId())
+				.participantId(participantEntity.getParticipantId())
 				.contribution(participantEntity.getContribution())
-				.attack(participantEntity.getAttack())
-				.createTime(participantEntity.getCreateTime())
+				.raidId(participantEntity.getRaidEntity().getRaidId())
+				.userId(participantEntity.getUserEntity().getUserId())
 				.build();
 		return participantDTO;
 	}
@@ -41,16 +35,11 @@ public interface ParticipantService {
 		RaidEntity raidEntity = RaidEntity.builder()
 				.raidId(participantDTO.getRaidId())
 				.build();
-		ParticipantId participantId = ParticipantId.builder()
+		ParticipantEntity participantEntity = ParticipantEntity.builder()
+				.participantId(participantDTO.getParticipantId())
+				.contribution(participantDTO.getContribution())
 				.userEntity(userEntity)
 				.raidEntity(raidEntity)
-				.build();
-		
-		ParticipantEntity participantEntity = ParticipantEntity.builder()
-				.participantId(participantId)
-				.attack(participantDTO.getAttack())
-				.contribution(participantDTO.getContribution())
-				.createTime(participantDTO.getCreateTime())
 				.build();
 		return participantEntity;
 	}
