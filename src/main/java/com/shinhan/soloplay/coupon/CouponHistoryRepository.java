@@ -20,7 +20,7 @@ public interface CouponHistoryRepository extends JpaRepository<CouponHistoryEnti
     // 특정 쿠폰 기록을 사용된 것으로 업데이트하는 메서드
     @Modifying
     @Transactional
-    @Query("UPDATE CouponHistoryEntity c SET c.isUsed = 1 WHERE c.couponHistoryId = :couponHistoryId")
+    @Query("UPDATE CouponHistoryEntity c SET c.isUsed = -1 WHERE c.couponHistoryId = :couponHistoryId")
     void markCouponAsUsed(Long couponHistoryId);
     
 }
