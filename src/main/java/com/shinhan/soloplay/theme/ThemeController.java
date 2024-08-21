@@ -28,7 +28,7 @@ public class ThemeController {
 	@GetMapping("/findAllTheme")
 	public ResponseEntity<?> findAllTheme() {
 		try {
-			List<ThemeSearchDTO1> findAllTheme = themeService1.findAllTheme();
+			List<ThemeEntity> findAllTheme = themeService1.findAllTheme();
 			System.err.println("findAllTheme 에러체크 : " + findAllTheme.size());
 			return ResponseEntity.ok(findAllTheme);
 		} catch (Exception e) {

@@ -2,6 +2,7 @@ package com.shinhan.soloplay.theme;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.soloplay.merchant.MerchantEntity;
 
 import jakarta.persistence.Column;
@@ -20,13 +21,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "SUB_CATEGORY")
-@ToString(exclude = "merchants")
+@ToString(exclude = {"merchants", "mainCategory"})
 public class SubCategoryEntity {
     
     @Id
@@ -34,13 +36,15 @@ public class SubCategoryEntity {
     @Column(name = "THEME_SUB_CATEGORY_ID")
     private Long themeSubCategoryId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "THEME_MAIN_CATEGORY_ID")
     private MainCategoryEntity mainCategory;
 
     @Column(name = "THEME_SUB_CATEGORY_NAME")
     private String themeSubCategoryName;
-
+    
+    
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
     private List<MerchantEntity> merchants;
 

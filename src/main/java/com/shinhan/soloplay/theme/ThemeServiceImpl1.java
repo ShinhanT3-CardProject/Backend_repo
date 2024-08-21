@@ -13,8 +13,8 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 	// 전체 테마 조회
 	@Override
-	public List<ThemeSearchDTO1> findAllTheme() {
-		return themeRepository1.findAllTheme();
+	public List<ThemeEntity> findAllTheme() {
+		return themeRepository1.findAll();
 	}
 	
 	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참)
@@ -140,7 +140,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 		//ThemeContentEntity 생성 및 연결
 		ThemeContentEntity themeContentEntity = ThemeContentEntity.builder()
-																	.theme(themeEntity)
+//																	.theme(themeEntity)
 																	.subCategory(themeRegisterDTO1.getSubCategory())
 																	.build();
 		themeEntity.setThemeContents(List.of(themeContentEntity));

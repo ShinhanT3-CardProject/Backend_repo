@@ -1,5 +1,7 @@
 package com.shinhan.soloplay.theme;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,13 +17,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@ToString(exclude = "theme")
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "THEME_CONTENT")
-@ToString(exclude = "theme")
 public class ThemeContentEntity {
     
     @Id
@@ -29,6 +31,7 @@ public class ThemeContentEntity {
     @Column(name = "THEME_CONTENT_ID")
     private Long themeContentId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "THEME_ID")
     private ThemeEntity theme;

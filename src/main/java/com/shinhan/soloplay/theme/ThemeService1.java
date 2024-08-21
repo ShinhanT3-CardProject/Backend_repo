@@ -5,7 +5,7 @@ import java.util.List;
 public interface ThemeService1 {
 	
 	// 전체 테마 조회
-	public List<ThemeSearchDTO1> findAllTheme();
+	public List<ThemeEntity> findAllTheme();
 	
 	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참)
 	public List<ThemeSearchDTO1> findAllThemeFilter(Long themeMainCategoryId);

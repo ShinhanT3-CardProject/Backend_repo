@@ -1,5 +1,6 @@
 package com.shinhan.soloplay.user;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "USER")
-public class UserEntity {
+public class UserEntity implements Serializable {
 
     @Id
     @Column(name = "USER_ID", nullable = false)
