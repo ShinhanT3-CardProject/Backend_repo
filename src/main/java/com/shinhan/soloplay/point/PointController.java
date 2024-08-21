@@ -28,7 +28,7 @@ public class PointController {
     }
 
     // 사용자 ID에 해당하는 포인트 리스트 (전체 내역)
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/all")
     public ResponseEntity<List<PointDTO>> getPointsByUserId(@PathVariable String userId) {
         List<PointDTO> points = pointService.getPointsByUserId(userId);
         return new ResponseEntity<>(points, HttpStatus.OK);
