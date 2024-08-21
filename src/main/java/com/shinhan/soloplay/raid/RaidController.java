@@ -1,19 +1,16 @@
 package com.shinhan.soloplay.raid;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinhan.soloplay.card.CardUsageHistoryDTO;
 import com.shinhan.soloplay.card.CardUsageHistoryService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.servlet.http.HttpSession;
+import com.shinhan.soloplay.participant.ParticipantDTO;
+import com.shinhan.soloplay.participant.ParticipantService;
 
 @RestController
 @RequestMapping("/raid")
@@ -22,20 +19,23 @@ public class RaidController {
 	@Autowired
 	CardUsageHistoryService cardUsageHistoryService;
 	
-	@GetMapping("/battle")
-	public Map<String, Object> battleDisplay(@RequestBody Map<String, Long> requestBody, HttpSession httpSession) {
-		String userId = (String)httpSession.getAttribute("loginUser");
-		Long raidId = requestBody.get("raidId");
-		Long usageId = requestBody.getOrDefault("usageId", 0L);
-		int amount = 0;
+	@Autowired
+	ParticipantService participantService;
+	
+	@GetMapping("/battle/{raidId}/{participantId}")
+	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, @PathVariable Long participantId) {
+//		String userId = (String)httpSession.getAttribute("loginUser");]
+		String userId = "user_1";
 		
-		List<CardUsageHistoryDTO> cardUsageHistoryList = cardUsageHistoryService.findByRaid(raidId, usageId);
+		List<ParticipantDTO> participants = participantService.findByRaid(participantId, raidId);
 		
-		Map<String, Object> responseBody = new HashMap<>();
-		responseBody.put("raidHistory", cardUsageHistoryList);
-		responseBody.put("userAmount", amount);
-		
-		return responseBody;
+		int contribution = participantService.userContribution(raidId, userId);
+		BattleResponseDTO response = BattleResponseDTO.builder()
+				.participants(participants)
+				.contribution(contribution)
+				.build();
+		System.out.println(response);
+		return response;
 	}
 
 }
