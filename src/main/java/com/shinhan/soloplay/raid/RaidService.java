@@ -7,6 +7,8 @@ public interface RaidService {
 	//진행중인 레이드 목록 조회
 	List<RaidDTO> getList();
 	
+	RaidDTO findByRaidId(Long raidId);
+	
 	//Entity -> DTO
 	//조회용
 	default RaidDTO entityToDTO(RaidEntity entity) {

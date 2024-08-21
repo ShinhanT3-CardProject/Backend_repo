@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.participant;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class ParticipantServiceImpl implements ParticipantService {
 	
 	final RaidRepository raidRepository;
+	final ParticipantRepository participantRepository;
 
 	@Override
 	public void participate(Long raidId, String userId) {
@@ -21,8 +23,13 @@ public class ParticipantServiceImpl implements ParticipantService {
 
 	@Override
 	public List<ParticipantDTO> findByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ParticipantDTO> participantList = participantRepository
+				.findByUserId(userId)
+				.stream()
+				.map(entity -> entityToDTO(entity))
+				.collect(Collectors.toList());
+		System.out.println("UserId : " + userId);
+		return participantList;
 	}
 
 	@Override

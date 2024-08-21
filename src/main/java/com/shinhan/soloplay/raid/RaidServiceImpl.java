@@ -22,5 +22,11 @@ public class RaidServiceImpl implements RaidService {
 		return raidList;
 	}
 
+	@Override
+	public RaidDTO findByRaidId(Long raidId) {
+		RaidDTO raidDTO = entityToDTO(raidRepository.findByRaidId(raidId));
+		return raidDTO;
+	}
+
 
 }
