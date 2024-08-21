@@ -1,5 +1,6 @@
 package com.shinhan.soloplay.merchant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.soloplay.theme.SubCategoryEntity;
 
 import jakarta.persistence.Column;
@@ -12,7 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString(exclude = "subCategory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +34,7 @@ public class MerchantEntity {
     @Column(name = "MERCHANT_NAME")
     private String merchantName;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
     private SubCategoryEntity subCategory;
