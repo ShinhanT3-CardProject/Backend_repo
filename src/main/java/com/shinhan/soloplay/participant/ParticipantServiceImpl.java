@@ -28,7 +28,6 @@ public class ParticipantServiceImpl implements ParticipantService {
 				.stream()
 				.map(entity -> entityToDTO(entity))
 				.collect(Collectors.toList());
-		System.out.println("UserId : " + userId);
 		return participantList;
 	}
 
