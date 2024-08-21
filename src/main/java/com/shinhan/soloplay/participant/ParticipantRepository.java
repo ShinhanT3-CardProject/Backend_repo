@@ -4,11 +4,19 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+
+import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.user.UserEntity;
 
 public interface ParticipantRepository extends JpaRepository<ParticipantEntity, Long>{
 	
-	@Query("SELECT p FROM ParticipantEntity p WHERE p.userEntity.id = :userId")
-	List<ParticipantEntity> findByUserId(@Param("userId") String userId);
+	List<ParticipantEntity> findByRaidEntityAndUserEntity(RaidEntity raid, UserEntity user);
+	List<ParticipantEntity> findByUserEntity(UserEntity user);
+	
+	@Query("SELECT p "
+			+ "FROM ParticipantEntity p "
+			+ "WHERE p.participantId > :participantId "
+			+ "AND p.raidEntity.raidId = :raidId")
+	List<ParticipantEntity> findByRaid(Long participantId, Long raidId);
 	
 }

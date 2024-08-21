@@ -8,13 +8,10 @@ import com.shinhan.soloplay.user.UserEntity;
 
 public interface ParticipantService {
 	
-	//CRUD
-	//1.Create
-	void participate(Long raidId, String userId);
-	
-	//2.Read
+
 	List<ParticipantDTO> findByUserId(String userId);
-	ParticipantDTO findById(Long raidId, String userId);	
+	List<ParticipantDTO> findByRaid(Long participantId, Long raidId);
+	int userContribution(Long raidId, String userId);
 	
 	//Entity -> DTO
 	default ParticipantDTO entityToDTO(ParticipantEntity participantEntity) {
