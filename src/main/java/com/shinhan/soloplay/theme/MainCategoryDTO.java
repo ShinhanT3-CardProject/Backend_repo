@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubCategoryDTO {
-    private Long themeSubCategoryId;
-    private String themeSubCategoryName;
+public class MainCategoryDTO {
+    private Long themeMainCategoryId;
+    private String themeMainCategoryName;
 }

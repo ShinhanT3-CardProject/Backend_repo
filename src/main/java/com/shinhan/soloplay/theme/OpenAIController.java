@@ -26,7 +26,7 @@ public class OpenAIController {
     }
     
     @PostMapping("/recommend")
-    public SubCategoryDTO recommendSubcategories(@RequestBody ThemeResponseDTO themeResponse) {
+    public SubCategoriesDTO recommendSubcategories(@RequestBody ThemeResponseDTO themeResponse) {
         return openAIService.getRecommendedSubcategories(themeResponse.getTheme(), themeResponse.getDetails());
     }
 }

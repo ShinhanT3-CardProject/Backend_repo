@@ -1,5 +1,6 @@
 package com.shinhan.soloplay.theme;
 
-public interface ThemeRepositoryJK {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface ThemeRepositoryJK extends JpaRepository<MainCategoryEntity, Long> {
 }
