@@ -21,13 +21,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@ToString(exclude = {"user", "themeContents"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "THEME")
-//@ToString(exclude = "themeContents")
 public class ThemeEntity {
     
     @Id
@@ -35,7 +35,7 @@ public class ThemeEntity {
     @Column(name = "THEME_ID")
     private Long themeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
