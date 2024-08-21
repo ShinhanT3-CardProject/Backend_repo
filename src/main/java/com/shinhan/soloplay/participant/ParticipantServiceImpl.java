@@ -5,7 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.shinhan.soloplay.raid.RaidRepository;
+import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,29 +14,54 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ParticipantServiceImpl implements ParticipantService {
 	
-	final RaidRepository raidRepository;
 	final ParticipantRepository participantRepository;
 
 	@Override
-	public void participate(Long raidId, String userId) {
-
-	}
-
-	@Override
-	public List<ParticipantDTO> findByUserId(String userId) {
-		List<ParticipantDTO> participantList = participantRepository
-				.findByUserId(userId)
+	public List<ParticipantDTO> findByRaid(Long participantId, Long raidId) {
+		List<ParticipantDTO> participantDTOList = participantRepository.findByRaid(participantId, raidId)
 				.stream()
 				.map(entity -> entityToDTO(entity))
 				.collect(Collectors.toList());
-		return participantList;
+		return participantDTOList;
 	}
 
+
 	@Override
-	public ParticipantDTO findById(Long raidId, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public int userContribution(Long raidId, String userId) {
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(raidId)
+				.build();
+		UserEntity userEntity = UserEntity.builder()
+				.userId(userId)
+				.build();
+		List<Integer> contributionList = participantRepository.findByRaidEntityAndUserEntity(raidEntity, userEntity)
+				.stream()
+				.map(ParticipantEntity::getContribution)
+				.collect(Collectors.toList());
+		
+		int result = 0;
+		
+		for (int i : contributionList) {
+			result += i;
+		}
+		
+		return result;
 	}
+
+
+	@Override
+	public List<ParticipantDTO> findByUserId(String userId) {
+		UserEntity userEntity = UserEntity.builder()
+				.userId(userId)
+				.build();
+		List<ParticipantDTO> participantDTOList = participantRepository.findByUserEntity(userEntity)
+				.stream()
+				.map(entity -> entityToDTO(entity))
+				.collect(Collectors.toList());
+		return participantDTOList;
+	}
+
+
 
 	
 
