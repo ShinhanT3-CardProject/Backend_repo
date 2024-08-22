@@ -19,9 +19,10 @@ public class PointServiceImpl implements PointService {
     public int getTotalPointsByUserId(String userId) {
     	UserEntity userEntity = UserEntity.builder().userId(userId).build();
         List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
-        return pointEntities.stream()
+        int totalPoints = pointEntities.stream()
                 .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) // Adjust total by isAdd value
                 .sum();
+        return Math.max(totalPoints, 0);
     }
     
     // 사용자 ID에 해당하는 모든 포인트 내역을 반환하는 메서드
