@@ -33,6 +33,9 @@ public class ParticipantEntity {
 	@ColumnDefault("0")
 	private int contribution;
 	
+	@ColumnDefault("0")
+	private int isRewarded;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
 	private UserEntity userEntity;
