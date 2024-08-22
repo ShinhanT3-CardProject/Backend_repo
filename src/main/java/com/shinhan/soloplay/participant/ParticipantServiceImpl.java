@@ -18,7 +18,6 @@ public class ParticipantServiceImpl implements ParticipantService {
 	final ParticipantRepository participantRepository;
 	final RaidRepository raidRepository;
 
-
 	@Override
 	public List<ParticipantDTO> findByRaid(Long raidId) {
 		RaidEntity raidEntity = RaidEntity.builder()
