@@ -21,7 +21,7 @@ public class PointServiceImpl implements PointService {
         List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
         int totalPoints = pointEntities.stream()
                 .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) // Adjust total by isAdd value
-                .sum();
+                .sum();                                                                                                                                                                                                                    
         return Math.max(totalPoints, 0);
     }
     
