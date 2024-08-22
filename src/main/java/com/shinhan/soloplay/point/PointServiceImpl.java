@@ -19,9 +19,10 @@ public class PointServiceImpl implements PointService {
     public int getTotalPointsByUserId(String userId) {
     	UserEntity userEntity = UserEntity.builder().userId(userId).build();
         List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
-        return pointEntities.stream()
+        int totalPoints = pointEntities.stream()
                 .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) // Adjust total by isAdd value
-                .sum();
+                .sum();                                                                                                                                                                                                                    
+        return Math.max(totalPoints, 0);
     }
     
     // 사용자 ID에 해당하는 모든 포인트 내역을 반환하는 메서드
@@ -56,7 +57,7 @@ public class PointServiceImpl implements PointService {
     
     // 사용자 ID와 함께 새로운 포인트를 생성하고 반환하는 메서드
     @Override
-    public PointDTO createPoint(String userId, PointDTO pointDTO) {
+    public void createPoint(String userId, PointDTO pointDTO) {
         PointEntity pointEntity = PointEntity.builder()
                 .pointId(pointDTO.getPointId())
                 .pointName(pointDTO.getPointName())
@@ -66,8 +67,7 @@ public class PointServiceImpl implements PointService {
                 .category(pointDTO.getCategory())
                 .user(UserEntity.builder().userId(userId).build()) 
                 .build();
-        PointEntity savedEntity = pointRepository.save(pointEntity);
-        return convertToDTO(savedEntity);
+        pointRepository.save(pointEntity);
     }
 
     private PointDTO convertToDTO(PointEntity pointEntity) {

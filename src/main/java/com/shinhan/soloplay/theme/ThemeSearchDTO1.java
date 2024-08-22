@@ -57,16 +57,12 @@ public class ThemeSearchDTO1 {
 	// 필요 기능별 생성자
 	
 	// 전체 테마 조회용
-	public ThemeSearchDTO1(Long themeId, String themeName, Boolean themeIsPublic, Long themeMainCategoryId,
-			String themeMainCategoryName, String themeBackground) {
+	public ThemeSearchDTO1(String themeName, String themeBackground) {
 		super();
-		this.themeId = themeId; // t.themeId
-		this.themeName = themeName; // t.themeName
-		this.themeIsPublic = themeIsPublic; // t.themeIsPublic
-		this.themeMainCategoryId = themeMainCategoryId; // mc.themeMainCategoryId
-		this.themeMainCategoryName = themeMainCategoryName; // mc.themeMainCategoryName
-		this.themeBackground = themeBackground; //mc.themeBackground
+		this.themeName = themeName;
+		this.themeBackground = themeBackground;
 	}
+	
 	
 	
 	

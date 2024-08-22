@@ -29,6 +29,7 @@ public class RaidEntity {
 	private Long raidId;
 	
 	private int hitPoint;
+	private int totalHitPoint;
 	private Timestamp startTime;
 	private Timestamp endTime;
 	private int reward;

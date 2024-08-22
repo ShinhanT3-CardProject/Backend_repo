@@ -1,17 +1,18 @@
 package com.shinhan.soloplay.theme;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ThemeService1 {
 	
-	// 전체 테마 조회
-	public List<ThemeEntity> findAllTheme();
+	// 전체 테마 조회 (공개여부 참) - 완료
+	public Map<Long, Map<String, String>> findAllTheme();
 	
-	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참)
+	// 전체 테마 조회 (카테고리별 필터링)
 	public List<ThemeSearchDTO1> findAllThemeFilter(Long themeMainCategoryId);
 	
-	// 테마 상세조회
-	public ThemeSearchDTO1 findThemeDetail(Long themeId);
+	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
+	public Map<String ,?>  findThemeDetail(Long themeId);
 	
 	// 나의 테마 조회
 	public List<ThemeSearchDTO1> findMyTheme(String userId);

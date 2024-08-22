@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.participant;
+package com.shinhan.soloplay.raid;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipantDTO {
-	
-	Long participantId;	
-	int contribution;
-	int isRewarded;
+public class RaidRewardRequestDTO {
+
 	Long raidId;
-	String userId;
-
-
 }

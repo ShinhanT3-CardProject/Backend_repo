@@ -10,11 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ThemeRepository1 extends JpaRepository<ThemeEntity, Long> {
 	
-	// 전체 테마 조회
-	@Query("SELECT t from ThemeEntity t")
-	List<ThemeSearchDTO1> findAllTheme();
+	// 전체 테마 조회 (공개여부 참) - 완료
+	List<ThemeEntity> findByThemeIsPublicTrue();
 	
-	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참)
+	// 전체 테마 조회 (카테고리별 필터링)
 	@Query("SELECT new com.shinhan.soloplay.theme.ThemeSearchDTO1(t.themeId, t.user, t.themeName, t.themeDescription, t.themeIsActivated, t.themeIsPublic, t.themeCreateDate, t.themeUpdateDate, mc.themeMainCategoryId, mc.themeMainCategoryName, mc.themeBackground, sc.themeSubCategoryName) " +
 				"FROM ThemeEntity t " +
 				"JOIN t.themeContents tc " +
@@ -23,14 +22,8 @@ public interface ThemeRepository1 extends JpaRepository<ThemeEntity, Long> {
 				"WHERE mc.themeMainCategoryId = :themeMainCategoryId AND t.themeIsPublic = true")
 	List<ThemeSearchDTO1> findAllThemeFilter(@Param("themeMainCategoryId") Long themeMainCategoryId);
 	
-	// 테마 상세조회
-	@Query("SELECT new com.shinhan.soloplay.theme.ThemeSearchDTO1(t.themeId, t.user, t.themeName, t.themeDescription, t.themeIsActivated, t.themeIsPublic, t.themeCreateDate, t.themeUpdateDate, mc.themeMainCategoryId, mc.themeMainCategoryName, mc.themeBackground, sc.themeSubCategoryName) " +
-			"FROM ThemeEntity t " +
-			"JOIN t.themeContents tc " +
-			"JOIN tc.subCategory sc " + 
-			"JOIN sc.mainCategory mc " +
-			"WHERE t.themeId=1")
-	ThemeSearchDTO1 findThemeDetail(Long themeId);
+	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
+	ThemeEntity findByThemeId(Long themeId);
 	
     // 나의 테마 조회
 	@Query("SELECT new com.shinhan.soloplay.theme.ThemeSearchDTO1(t.themeId, t.user, t.themeName, t.themeDescription, t.themeIsActivated, t.themeIsPublic, t.themeCreateDate, t.themeUpdateDate, mc.themeMainCategoryId, mc.themeMainCategoryName, mc.themeBackground, sc.themeSubCategoryName) " +
@@ -48,10 +41,6 @@ public interface ThemeRepository1 extends JpaRepository<ThemeEntity, Long> {
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 //	@Query("SELECT * from ThemeEntity")
 //	ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1);
-		
-	// 테마 삭제 (나의 테마 상세조회에서 가능)
-//	@Query("SELECT * from ThemeEntity")
-//	void deleteTheme(Long themeId);
 		
 	// 테마 등록
 //	@Query("SELECT * from ThemeEntity")
