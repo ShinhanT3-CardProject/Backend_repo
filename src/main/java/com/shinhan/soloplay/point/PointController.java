@@ -50,8 +50,12 @@ public class PointController {
 
     // 새로운 포인트 생성/삭제 및 데이터 베이스 저장
     @PostMapping("/{userId}")
-    public ResponseEntity<PointDTO> createPoint(@PathVariable String userId, @RequestBody PointDTO pointDTO) {
-        PointDTO createdPoint = pointService.createPoint(userId, pointDTO);
-        return new ResponseEntity<>(createdPoint, HttpStatus.CREATED);
+    public ResponseEntity<String> createPoint(@PathVariable String userId, @RequestBody PointDTO pointDTO) {
+        try {
+        	pointService.createPoint(userId, pointDTO);
+        	return ResponseEntity.ok("point issued successfully");
+        }catch (RuntimeException e){
+        	return ResponseEntity.badRequest().body(e.getMessage());
+        }    	
     }
 }
