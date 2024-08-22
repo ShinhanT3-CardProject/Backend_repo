@@ -14,14 +14,15 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
 	List<ParticipantEntity> findByRaidEntityAndUserEntity(RaidEntity raid, UserEntity user);
 	List<ParticipantEntity> findByRaidEntityAndUserEntityAndIsRewarded(RaidEntity raid, UserEntity user, int isRewarded);
 	List<ParticipantEntity> findByUserEntity(UserEntity user);
+	List<ParticipantEntity> findByRaidEntity(RaidEntity raid);
 	
 	@Query("SELECT p "
 			+ "FROM ParticipantEntity p "
-			+ "WHERE p.participantId > :participantId "
-			+ "AND p.raidEntity.raidId = :raidId")
-	List<ParticipantEntity> findByRaid(Long participantId, Long raidId);
+			+ "WHERE p.raidEntity.raidId = :raidId "
+			+ "AND p.participantId > :participantId")
+	List<ParticipantEntity> findAdditionalParticipant(Long raidId, Long participantId);
 	
 	@Modifying
-	@Query("UPDATE ParticipantEntity p SET p.isRewarded = 0 WHERE p.participantId = :participantId")
+	@Query("UPDATE ParticipantEntity p SET p.isRewarded = 2 WHERE p.participantId = :participantId")
 	int updateIsRewarded(Long participantId);
 }

@@ -9,7 +9,8 @@ import com.shinhan.soloplay.user.UserEntity;
 public interface ParticipantService {
 	
 	List<ParticipantDTO> findByUserId(String userId);
-	List<ParticipantDTO> findByRaid(Long participantId, Long raidId);
+	List<ParticipantDTO> findByRaid(Long raidId);
+	List<ParticipantDTO> findAdditionalParticipant(Long raidId, Long participantId);
 	int userContribution(Long raidId, String userId);
 	int userReward(Long raidId, String userId);
 	

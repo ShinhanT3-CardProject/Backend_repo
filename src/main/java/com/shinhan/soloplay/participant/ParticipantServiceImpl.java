@@ -20,15 +20,27 @@ public class ParticipantServiceImpl implements ParticipantService {
 
 
 	@Override
-	public List<ParticipantDTO> findByRaid(Long participantId, Long raidId) {
-		List<ParticipantDTO> participantDTOList = participantRepository.findByRaid(participantId, raidId)
+	public List<ParticipantDTO> findByRaid(Long raidId) {
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(raidId)
+				.build();
+		List<ParticipantDTO> participantDTOList = participantRepository.findByRaidEntity(raidEntity)
 				.stream()
 				.map(entity -> entityToDTO(entity))
 				.collect(Collectors.toList());
 		return participantDTOList;
 	}
 
+	@Override
+	public List<ParticipantDTO> findAdditionalParticipant(Long raidId, Long participantId) {
+		List<ParticipantDTO> participantDTOList = participantRepository.findAdditionalParticipant(raidId, participantId)
+				.stream()
+				.map(entity -> entityToDTO(entity))
+				.collect(Collectors.toList());
+		return participantDTOList;
+	}
 
+	
 	@Override
 	public int userContribution(Long raidId, String userId) {
 		RaidEntity raidEntity = RaidEntity.builder()
@@ -104,6 +116,5 @@ public class ParticipantServiceImpl implements ParticipantService {
 		
 		return result;
 	}
-
 
 }

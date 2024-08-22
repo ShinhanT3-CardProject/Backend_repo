@@ -23,23 +23,46 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RaidController {
 	
+	final RaidService raidService;
 	final CardUsageHistoryService cardUsageHistoryService;
 	final ParticipantService participantService;
 	final PointService pointService;
 	
-	@GetMapping("/battle/{raidId}/{participantId}")
-	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, @PathVariable Long participantId) {
+	@GetMapping("/battle/{raidId}")
+	public BattleResponseDTO battleDisplay(@PathVariable Long raidId) {
 //		String userId = (String)httpSession.getAttribute("loginUser");
 		String userId = "user_1";
 		
-		List<ParticipantDTO> participants = participantService.findByRaid(participantId, raidId);
-		
+		List<ParticipantDTO> participants = participantService.findByRaid(raidId);
+		RaidDTO raid = null;
 		int contribution = participantService.userContribution(raidId, userId);
 		BattleResponseDTO response = BattleResponseDTO.builder()
+				.raid(raid)
 				.participants(participants)
 				.contribution(contribution)
 				.build();
 		System.out.println(response);
+		return response;
+	}
+	
+	@GetMapping("/notification/{raidId}/{participantId}")
+	public BattleResponseDTO addtionalParticipant(@PathVariable Long raidId, @PathVariable Long participantId) {
+//		String userId = (String)httpSession.getAttribute("loginUser");
+		String userId = "user_1";
+		int contribution = 0;
+		
+		List<ParticipantDTO> additionalParticipants = participantService.findAdditionalParticipant(raidId, participantId);
+		for (ParticipantDTO participants : additionalParticipants) {
+			if (participants.getUserId().equals(userId)) {
+				contribution += participants.getContribution();
+			}
+		}
+		
+		BattleResponseDTO response = BattleResponseDTO.builder()
+				.participants(additionalParticipants)
+				.contribution(contribution)
+				.build();
+		
 		return response;
 	}
 	
