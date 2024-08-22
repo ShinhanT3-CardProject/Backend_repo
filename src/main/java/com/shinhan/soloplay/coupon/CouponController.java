@@ -31,11 +31,11 @@ public class CouponController {
         }
     }
 
-    // 사용자의 모든 사용 가능한 쿠폰 기록 조회 API (isUsed가1 인 경우)
+    // 사용자의 모든 사용 가능한 쿠폰 기록 조회 API (isUsed가 1인 경우)
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<CouponHistoryDTO>> getCouponHistoryByUser(@PathVariable String userId) {
+    public ResponseEntity<List<CouponWithDetailsDTO>> getCouponHistoryByUser(@PathVariable String userId) {
         try {
-            List<CouponHistoryDTO> couponHistories = couponService.getCouponHistoryByUser(userId);
+            List<CouponWithDetailsDTO> couponHistories = couponService.getCouponHistoryByUser(userId);
             return ResponseEntity.ok(couponHistories);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
