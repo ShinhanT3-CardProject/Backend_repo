@@ -56,7 +56,7 @@ public class CardController {
 		return result; // 테마명과 카드 리스트를 함께 반환
 	}
 
-	@GetMapping("/userCardsAndUsageHistory")
+	@GetMapping("/history")
 	public Map<String, Map<String, Object>> getUserCardsAndUsageHistory(@RequestParam String userId) {
 	    Map<String, Map<String, Object>> result = new HashMap<>();
 
