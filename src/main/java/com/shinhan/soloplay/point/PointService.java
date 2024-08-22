@@ -21,6 +21,6 @@ public interface PointService {
     List<PointDTO> getUsedPointsByUserId(String userId);
 	
 	//새로운 포인트 생성/삭제 및 데이터 베이스 저장
-    PointDTO createPoint(String userId, PointDTO pointDTO);
+    void createPoint(String userId, PointDTO pointDTO);
 	
 }
