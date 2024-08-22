@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.theme;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,11 @@ public class ThemeController {
 	
 	final ThemeService1 themeService1;
 	
-	// 전체 테마 조회
+	// 전체 테마 조회 (공개여부 참) - 완료
 	@GetMapping("/findAllTheme")
 	public ResponseEntity<?> findAllTheme() {
 		try {
-			List<ThemeEntity> findAllTheme = themeService1.findAllTheme();
+			Map<Long, Map<String, String>> findAllTheme = themeService1.findAllTheme();
 			System.err.println("findAllTheme 에러체크 : " + findAllTheme.size());
 			return ResponseEntity.ok(findAllTheme);
 		} catch (Exception e) {
@@ -37,7 +38,7 @@ public class ThemeController {
 		}
 	}
 	
-	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참) 
+	// 전체 테마 조회 (카테고리별 필터링) 
 	@GetMapping("/findAllThemeFilter")
 	public ResponseEntity<?> findAllThemeFilter(@RequestParam Long themeMainCategoryId) {
 		try {
@@ -49,11 +50,11 @@ public class ThemeController {
 		}
 	}
 	
-	// 테마 상세조회
+	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
-			ThemeSearchDTO1 findThemeDetail = themeService1.findThemeDetail(themeId);
+			Map<String ,?>  findThemeDetail = themeService1.findThemeDetail(themeId);
 			return ResponseEntity.ok(findThemeDetail);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 찾을 수 없습니다.");
@@ -113,9 +114,7 @@ public class ThemeController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-			
 		}
-		
 	}
 	
 	// 테마 등록

@@ -3,7 +3,6 @@ package com.shinhan.soloplay.theme;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.persistence.Column;
