@@ -58,9 +58,7 @@ public class ThemeEntity {
     @Column(name = "THEME_UPDATE_DATE")
     private LocalDateTime themeUpdateDate;
 
-//    @OneToMany(mappedBy = "theme" , fetch = FetchType.EAGER)
-    @OneToMany(mappedBy = "theme" , fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "theme", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ThemeContentEntity> themeContents;
 
-    // Getters and Setters
 }

@@ -39,5 +39,4 @@ public class MainCategoryEntity {
     @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY)
     private List<SubCategoryEntity> subCategories;
 
-    // Getters and Setters
 }

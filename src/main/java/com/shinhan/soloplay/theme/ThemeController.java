@@ -107,13 +107,9 @@ public class ThemeController {
 	// 테마 등록
 	@PostMapping("/insertTheme")
 	public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO1 themeRegisterDTO1) {
-		try {
-			ThemeRegisterDTO1 insertTheme = themeService1.insertTheme(themeRegisterDTO1);
-			return ResponseEntity.status(HttpStatus.CREATED).body(insertTheme);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-		}
+	    // 여기서 DTO를 서비스로 전달합니다.
+	    ThemeRegisterDTO1 insertTheme = themeService1.insertTheme(themeRegisterDTO1);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(insertTheme);
 	}
 	
 	// 테마 불러오기 (테마 등록, 테마 수정에서 가능)
