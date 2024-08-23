@@ -57,7 +57,11 @@ public class PointServiceImpl implements PointService {
     
     // 사용자 ID와 함께 새로운 포인트를 생성하고 반환하는 메서드
     @Override
-    public void createPoint(String userId, PointDTO pointDTO) {
+    public int createPoint(String userId, PointDTO pointDTO) {
+    	int maxPoint = getTotalPointsByUserId(userId);
+    	
+    	if (pointDTO.getIsAdd() == -1 && pointDTO.getAmount() > maxPoint) return 0; // 실패
+    	
         PointEntity pointEntity = PointEntity.builder()
                 .pointId(pointDTO.getPointId())
                 .pointName(pointDTO.getPointName())
@@ -67,7 +71,9 @@ public class PointServiceImpl implements PointService {
                 .category(pointDTO.getCategory())
                 .user(UserEntity.builder().userId(userId).build()) 
                 .build();
+        
         pointRepository.save(pointEntity);
+        return 1; // 성공
     }
 
     private PointDTO convertToDTO(PointEntity pointEntity) {
