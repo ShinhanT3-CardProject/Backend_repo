@@ -1,48 +1,117 @@
 package com.shinhan.soloplay.theme;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ThemeServiceImpl1 implements ThemeService1 {
 	
-	@Autowired
-	ThemeRepository1 themeRepository1;
+	private final ThemeRepository1 themeRepository1;
 
-	// 전체 테마 조회
+	// 전체 테마 조회 (공개여부 참) - 완료
 	@Override
-	public List<ThemeEntity> findAllTheme() {
-		return themeRepository1.findAll();
-	}
-	
-	// 전체 테마 조회 (카테고리별 필터링, 공개여부 참)
-	@Override
-	public List<ThemeSearchDTO1> findAllThemeFilter(Long themeMainCategoryId) {
-		return themeRepository1.findAllThemeFilter(themeMainCategoryId);
-	}
+	public Map<Long, Map<String, String>> findAllTheme() {
+		Map<Long, Map<String, String>> result = new HashMap<>();
+		
+		List<ThemeEntity> trueThemes = themeRepository1.findByThemeIsPublicTrue();
+		Map<Long, ThemeContentEntity> contents = new HashMap<>();
+		trueThemes.stream().forEach(theme->{
+			theme.getThemeContents().stream().forEach(content->{
+				contents.put(content.getThemeContentId(), content);
+			});
+			
+			contents.keySet().stream().forEach(contentId->{
+				Map<String, String> nameAndBack = new HashMap<>();
+				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
+				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+		
+				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
+			});
+		});
+		
+		return result;
+  }
     
-	// 테마 상세 조회
+	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
-    public ThemeSearchDTO1 findThemeDetail(Long themeId) {
-    	return themeRepository1.findMyThemeDetail(themeId);
-//    							.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
+    public Map<String ,?> findThemeDetail(Long themeId) {
+    	Map<String, Object> result = new HashMap<>(); //맨 마지막에 리턴할 값을 담아주는 용도
+    	Map<Long, ThemeContentEntity> contents = new HashMap<>();
+    	
+    	ThemeEntity themeEntity = themeRepository1.findByThemeId(themeId);
+    	result.put("themeName", themeEntity.getThemeName());
+    	result.put("themeDescription", themeEntity.getThemeDescription());
+    	
+    	themeEntity.getThemeContents().stream().forEach(content -> {
+    		contents.put(content.getThemeContentId(), content);
+    	});
+    	
+    	List<String> subCategories = new ArrayList<>();
+    	for(Long contentId:contents.keySet()) {
+    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+    		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+    		
+    		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
+    		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
+    		
+    		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
+    	}
+    	result.put("themeSunCategoryName", subCategories);
+    	
+    	return result;
     }
-	
-	// 나의 테마 조회
-	@Override
-	public List<ThemeSearchDTO1> findMyTheme(String userId) {
-		return themeRepository1.findMyTheme(userId);
-	}
 
-	// 나의 테마 상세조회
+//    for문의 다른 방법
+//    	contents.keySet().stream().forEach(contentId -> {
+//    		
+//    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+//    		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+//    		result.put("themeSunCategoryName", contents.get(contentId).getSubCategory().getThemeSubCategoryName());
+//    		
+//    	});
+	
+    // 나의 테마 조회 - 완료
     @Override
-    public ThemeSearchDTO1 findMyThemeDetail(Long themeId) {
-    	return findThemeDetail(themeId);
-    }
+	public Map<Long, Map<String, String>> findMyTheme(String userId) {
+		Map<Long, Map<String, String>> result = new HashMap<>();
+		
+		List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
+		System.out.println("myThemes : " + myThemes);
+		Map<Long, ThemeContentEntity> contents = new HashMap<>();
+		myThemes.stream().forEach(theme->{
+			
+			if (theme.getThemeContents().isEmpty()) {
+				System.out.println("themeContents가 비어있습니다.");
+			}
+			
+			theme.getThemeContents().stream().forEach(content -> {
+				contents.put(content.getThemeContentId(), content);
+			});
+			
+			contents.keySet().stream().forEach(contentId -> {
+				Map<String, String> nameAndBack = new HashMap<>();
+				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
+				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+				
+				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
+			});
+		});
+		System.out.println("result : " + result);
+		
+		return result;
+	}
     
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	@Override
@@ -59,7 +128,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return convertToRegisterDTO(updateTheme);
 	}
 	
-	// 테마 삭제 (나의 테마 상세조회에서 가능)
+	// 테마 삭제 (나의 테마 상세조회에서 가능) - 완료
 	@Override
 	public void deleteTheme(Long themeId) {
 		themeRepository1.deleteById(themeId);
@@ -104,6 +173,8 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	public List<ThemeSearchDTO1> loadOtherTheme(Long themeId) {
 		return themeRepository1.loadOtherTheme(themeId);
 	}
+	
+	//없어도 되는지 실험
 	
 	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
 		// 첫 번째 ThemeContentEntity를 가져와서 사용

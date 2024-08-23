@@ -1,10 +1,6 @@
 package com.shinhan.soloplay.point;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 public interface PointService {
 	
@@ -21,6 +17,6 @@ public interface PointService {
     List<PointDTO> getUsedPointsByUserId(String userId);
 	
 	//새로운 포인트 생성/삭제 및 데이터 베이스 저장
-    PointDTO createPoint(String userId, PointDTO pointDTO);
+    int createPoint(String userId, PointDTO pointDTO);
 	
 }

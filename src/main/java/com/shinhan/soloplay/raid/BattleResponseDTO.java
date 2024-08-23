@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class BattleResponseDTO {
+	private RaidDTO raid;
 	private List<ParticipantDTO> participants;
 	private int contribution;
 }
