@@ -16,6 +16,7 @@ import com.shinhan.soloplay.participant.ParticipantService;
 import com.shinhan.soloplay.point.PointDTO;
 import com.shinhan.soloplay.point.PointService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,12 +30,11 @@ public class RaidController {
 	final PointService pointService;
 	
 	@GetMapping("/battle/{raidId}")
-	public BattleResponseDTO battleDisplay(@PathVariable Long raidId) {
-//		String userId = (String)httpSession.getAttribute("loginUser");
-		String userId = "user_1";
+	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, HttpSession httpSession) {
+		String userId = (String)httpSession.getAttribute("loginUser");
 		
 		List<ParticipantDTO> participants = participantService.findByRaid(raidId);
-		RaidDTO raid = null;
+		RaidDTO raid = raidService.findByRaidId(raidId);
 		int contribution = participantService.userContribution(raidId, userId);
 		BattleResponseDTO response = BattleResponseDTO.builder()
 				.raid(raid)
@@ -46,9 +46,9 @@ public class RaidController {
 	}
 	
 	@GetMapping("/notification/{raidId}/{participantId}")
-	public BattleResponseDTO addtionalParticipant(@PathVariable Long raidId, @PathVariable Long participantId) {
-//		String userId = (String)httpSession.getAttribute("loginUser");
-		String userId = "user_1";
+	public BattleResponseDTO addtionalParticipant(@PathVariable Long raidId, @PathVariable Long participantId, HttpSession httpSession) {
+		String userId = (String)httpSession.getAttribute("loginUser");
+		RaidDTO raid = raidService.findByRaidId(raidId);
 		int contribution = 0;
 		
 		List<ParticipantDTO> additionalParticipants = participantService.findAdditionalParticipant(raidId, participantId);
@@ -59,6 +59,7 @@ public class RaidController {
 		}
 		
 		BattleResponseDTO response = BattleResponseDTO.builder()
+				.raid(raid)
 				.participants(additionalParticipants)
 				.contribution(contribution)
 				.build();
@@ -67,11 +68,10 @@ public class RaidController {
 	}
 	
 	@PostMapping("/reward")
-	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request) {
+	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request, HttpSession httpSession) {
         try {
         	Long raidId = request.getRaidId();
-//    		String userId = (String)httpSession.getAttribute("loginUser");
-        	String userId = "user_2";
+    		String userId = (String)httpSession.getAttribute("loginUser");
         	int reward = participantService.userReward(raidId, userId);
         	String message = "";
         	
