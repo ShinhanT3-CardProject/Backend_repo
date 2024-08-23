@@ -17,6 +17,7 @@ public class RaidDTO {
 
 	Long raidId;
 	int hitPoint;
+	int totalHitPoint;
 	Timestamp startTime;
 	Timestamp endTime;
 	int reward;

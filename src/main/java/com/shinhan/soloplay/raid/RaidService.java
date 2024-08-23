@@ -16,6 +16,7 @@ public interface RaidService {
 		RaidDTO dto = RaidDTO.builder()
 				.raidId(entity.getRaidId())
 				.hitPoint(entity.getHitPoint())
+				.totalHitPoint(entity.getTotalHitPoint())
 				.startTime(entity.getStartTime())
 				.endTime(entity.getEndTime())
 				.reward(entity.getReward())
