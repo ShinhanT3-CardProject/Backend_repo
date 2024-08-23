@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -38,19 +37,7 @@ public class ThemeController {
 		}
 	}
 	
-	// 전체 테마 조회 (카테고리별 필터링) 
-	@GetMapping("/findAllThemeFilter")
-	public ResponseEntity<?> findAllThemeFilter(@RequestParam Long themeMainCategoryId) {
-		try {
-			List<ThemeSearchDTO1> findAllThemeFilter = themeService1.findAllThemeFilter(themeMainCategoryId);
-			return ResponseEntity.ok(findAllThemeFilter);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-		}
-	}
-	
-	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
+	// 테마 상세 조회 - 완료
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
@@ -64,12 +51,12 @@ public class ThemeController {
 		}
 	}
 	
-	// 나의 테마 조회
+	// 나의 테마 조회 - 완료
 	@GetMapping("/findMyTheme")
 	public ResponseEntity<?> findMyTheme(HttpSession httpSession) {
-		String userId = (String) httpSession.getAttribute("userId");
+		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			List<ThemeSearchDTO1> findMyTheme = themeService1.findMyTheme(userId);
+			Map<Long, Map<String, String>> findMyTheme = themeService1.findMyTheme(userId);
 			return ResponseEntity.ok(findMyTheme);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -78,11 +65,11 @@ public class ThemeController {
 		
 	}
 	
-	// 나의 테마 상세조회
+	// 나의 테마 상세조회 - 완료
 	@GetMapping("/findMyThemeDetail/{themeId}")
 	public ResponseEntity<?> findMyThemeDetail(@PathVariable Long themeId) {
 		try {
-			ThemeSearchDTO1 findMyThemeDetail = themeService1.findMyThemeDetail(themeId);
+			Map<String ,?> findMyThemeDetail = themeService1.findThemeDetail(themeId);
 			return ResponseEntity.ok(findMyThemeDetail);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,7 +92,7 @@ public class ThemeController {
 		}
 	}
 	
-	// 테마 삭제 (나의 테마 상세조회에서 가능)
+	// 테마 삭제 (나의 테마 상세조회에서 가능) - 완료
 	@DeleteMapping("/deleteTheme/{themeId}")
 	public ResponseEntity<String> deleteTheme(@PathVariable Long themeId) {
 		try {

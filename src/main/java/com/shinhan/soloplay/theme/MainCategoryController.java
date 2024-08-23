@@ -26,7 +26,7 @@ public class MainCategoryController {
     @GetMapping("/{mainCategoryId}/subcategories")
     public List<SubCategoryDTO> getSubCategoriesByMainCategory(@PathVariable Long mainCategoryId) {
         return mainCategoryService.getSubCategoriesByMainCategory(mainCategoryId).stream()
-                .map(entity -> new SubCategoryDTO(entity.getThemeSubCategoryId(), entity.getThemeSubCategoryName()))
+                .map(entity -> new SubCategoryDTO(entity.getThemeSubCategoryId(), entity.getThemeSubCategoryName(), entity.getMainCategory().getThemeMainCategoryName()))
                 .collect(Collectors.toList());
     }
 }

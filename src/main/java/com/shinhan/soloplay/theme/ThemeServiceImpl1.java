@@ -31,6 +31,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 				Map<String, String> nameAndBack = new HashMap<>();
 				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
 				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
 		
 				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
 			});
@@ -38,14 +39,8 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		
 		return result;
   }
-	
-	// 전체 테마 조회 (카테고리별 필터링)
-	@Override
-	public List<ThemeSearchDTO1> findAllThemeFilter(Long themeMainCategoryId) {
-		return themeRepository1.findAllThemeFilter(themeMainCategoryId);
-	}
     
-	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
+	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
     public Map<String ,?> findThemeDetail(Long themeId) {
     	Map<String, Object> result = new HashMap<>(); //맨 마지막에 리턴할 값을 담아주는 용도
@@ -63,12 +58,18 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     	for(Long contentId:contents.keySet()) {
     		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
     		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+    		
+    		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
+    		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
+    		
     		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
     	}
     	result.put("themeSunCategoryName", subCategories);
     	
     	return result;
     }
+
+//    for문의 다른 방법
 //    	contents.keySet().stream().forEach(contentId -> {
 //    		
 //    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
@@ -77,17 +78,37 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 //    		
 //    	});
 	
-	// 나의 테마 조회
-	@Override
-	public List<ThemeSearchDTO1> findMyTheme(String userId) {
-		return themeRepository1.findMyTheme(userId);
-	}
-
-	// 나의 테마 상세조회
+    // 나의 테마 조회 - 완료
     @Override
-    public ThemeSearchDTO1 findMyThemeDetail(Long themeId) {
-    	return findMyThemeDetail(themeId);
-    }
+	public Map<Long, Map<String, String>> findMyTheme(String userId) {
+		Map<Long, Map<String, String>> result = new HashMap<>();
+		
+		List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
+		System.out.println("myThemes : " + myThemes);
+		Map<Long, ThemeContentEntity> contents = new HashMap<>();
+		myThemes.stream().forEach(theme->{
+			
+			if (theme.getThemeContents().isEmpty()) {
+				System.out.println("themeContents가 비어있습니다.");
+			}
+			
+			theme.getThemeContents().stream().forEach(content -> {
+				contents.put(content.getThemeContentId(), content);
+			});
+			
+			contents.keySet().stream().forEach(contentId -> {
+				Map<String, String> nameAndBack = new HashMap<>();
+				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
+				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+				
+				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
+			});
+		});
+		System.out.println("result : " + result);
+		
+		return result;
+	}
     
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	@Override
@@ -104,7 +125,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return convertToRegisterDTO(updateTheme);
 	}
 	
-	// 테마 삭제 (나의 테마 상세조회에서 가능)
+	// 테마 삭제 (나의 테마 상세조회에서 가능) - 완료
 	@Override
 	public void deleteTheme(Long themeId) {
 		themeRepository1.deleteById(themeId);
@@ -123,6 +144,8 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	public List<ThemeSearchDTO1> loadOtherTheme(Long themeId) {
 		return themeRepository1.loadOtherTheme(themeId);
 	}
+	
+	//없어도 되는지 실험
 	
 	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
 		// 첫 번째 ThemeContentEntity를 가져와서 사용
