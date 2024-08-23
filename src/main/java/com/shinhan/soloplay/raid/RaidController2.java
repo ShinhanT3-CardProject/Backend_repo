@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinhan.soloplay.participant.ParticipantDTO;
 import com.shinhan.soloplay.participant.ParticipantService;
 
+import jakarta.servlet.http.HttpSession;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/raid")
@@ -28,7 +30,9 @@ public class RaidController2 {
 	}
 	
 	@GetMapping("/raidHistory")
-	public List<ParticipantDTO> raidHistory(String userId) {
+	public List<ParticipantDTO> raidHistory(HttpSession session) {
+		String userId = (String) session.getAttribute("loginUser");
+		
 		return participantService.findByUserId(userId);
 	}
 	
