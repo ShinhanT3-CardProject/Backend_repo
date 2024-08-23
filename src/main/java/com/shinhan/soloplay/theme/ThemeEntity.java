@@ -3,9 +3,9 @@ package com.shinhan.soloplay.theme;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.soloplay.user.UserEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -58,8 +58,7 @@ public class ThemeEntity {
     @Column(name = "THEME_UPDATE_DATE")
     private LocalDateTime themeUpdateDate;
 
-    @OneToMany(mappedBy = "theme" , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "theme", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ThemeContentEntity> themeContents;
 
-    // Getters and Setters
 }
