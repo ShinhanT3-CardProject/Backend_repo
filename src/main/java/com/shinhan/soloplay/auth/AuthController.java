@@ -1,6 +1,6 @@
 package com.shinhan.soloplay.auth;
 
-import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,41 +55,41 @@ public class AuthController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> requestBody,HttpServletRequest request, HttpSession httpSession, HttpServletResponse response) {
-    	String userId = requestBody.get("userId");
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpSession httpSession, HttpServletResponse response) {
+        String userId = requestBody.get("userId");
         String userPassword = requestBody.get("userPassword");
         
-        System.out.println("HttpSession ----->"+httpSession.getAttribute("loginUser"));
-        System.out.println(httpSession.getAttribute("loginUserName"));
-        System.out.println();
+        Map<String, Object> responseBody = new HashMap<>();
+        
         try {
             AuthDTO loginUser = (AuthDTO) authService.loadUserByUsername(userId);
+            
             if (passwordEncoder.matches(userPassword, loginUser.getUser().getUserPassword())) {
-                httpSession.setAttribute("loginUser", loginUser.getUsername());
-                httpSession.setAttribute("loginUserName", loginUser.getUser().getUserName());
-//                Cookie cookie = new Cookie("USER_ID", URLEncoder.encode(userId, "UTF-8"));
-//                cookie.setHttpOnly(true); // 자바스크립트에서 쿠키 접근 불가하게 설정
-//                cookie.setPath("/"); // 쿠키 경로 설정
-//                cookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효기간 설정 (7일)
-//                
-//                // SameSite=None과 Secure 설정을 위해
-//                cookie.setSecure(true);
-//                cookie.setPath("/"); // 필요에 따라 쿠키의 유효 경로 설정
-                //response.addCookie(cookie);
+                // 기존 세션을 무효화하고 새로운 세션을 생성하여 세션 고정 공격을 방지합니다.
+                request.getSession().invalidate();
+                HttpSession newSession = request.getSession(true);
                 
-                return ResponseEntity.ok().body("로그인 성공");
+                newSession.setAttribute("loginUser", loginUser.getUsername());
+                newSession.setAttribute("loginUserName", loginUser.getUser().getUserName());
+                
+                responseBody.put("message", "로그인 성공");
+                responseBody.put("user", loginUser.getUser()); // 필요한 사용자 정보 포함
+                return ResponseEntity.ok().body(responseBody);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 불일치");
+                responseBody.put("message", "인증 실패");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
             }
 
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("없는 유저입니다.");
+            responseBody.put("message", "없는 유저입니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
         } catch (Exception e) {
-            // 기타 오류 응답
-        	e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류.");
+            e.printStackTrace();
+            responseBody.put("message", "서버 오류.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
+
 
     
     @PostMapping("/registration")
@@ -107,5 +107,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입에 실패했습니다.");
         }
     }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        // 세션 무효화
+        session.removeAttribute("loginUser");
+        session.removeAttribute("loginUserName");
+        System.out.println("logout");
+        return ResponseEntity.ok("로그아웃 성공");
+    }
+    
 
 }
