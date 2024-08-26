@@ -31,6 +31,7 @@ public class RaidController {
 	
 	@GetMapping("/battle/{raidId}")
 	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, HttpSession httpSession) {
+		
 		String userId = (String)httpSession.getAttribute("loginUser");
 		
 		List<ParticipantDTO> participants = participantService.findByRaid(raidId);
