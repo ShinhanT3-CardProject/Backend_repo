@@ -9,6 +9,7 @@ import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.raid.RaidRepository;
 import com.shinhan.soloplay.user.UserEntity;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -77,6 +78,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 
 
 	@Override
+	@Transactional
 	public int userReward(Long raidId, String userId) {
 		RaidEntity raidEntity = raidRepository.findById(raidId).get();
 		if (raidEntity.getHitPoint() == 0) {
@@ -111,7 +113,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 		}
 		
 		participantList.stream()
-			.map(entity -> participantRepository.updateIsRewarded(entity.getParticipantId()));
+			.forEach(entity -> {
+				int updatedRows = participantRepository.updateIsRewarded(entity.getParticipantId(), 2);
+				System.out.println("Updated Rows: " + updatedRows);
+			});
 		
 		return result;
 	}

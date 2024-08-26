@@ -31,7 +31,6 @@ public class RaidController {
 	
 	@GetMapping("/battle/{raidId}")
 	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, HttpSession httpSession) {
-		
 		String userId = (String)httpSession.getAttribute("loginUser");
 		
 		List<ParticipantDTO> participants = participantService.findByRaid(raidId);
@@ -68,8 +67,24 @@ public class RaidController {
 		return response;
 	}
 	
+	@GetMapping("/raidList")
+	public List<RaidDTO> raidList() {
+		return raidService.getRaidList();
+	}
+	
+	@GetMapping("/raidHistory")
+	public List<ParticipantDTO> raidHistory(HttpSession session) {
+		String userId = (String) session.getAttribute("loginUser");
+		
+		return participantService.findByUserId(userId);
+	}
+	
+	@GetMapping("/raidHistory/detail")
+	public RaidDTO raidDetail(Long raidId) {
+		return raidService.findByRaidId(raidId);
+	}
+	
 	@PostMapping("/reward")
-
 	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request, HttpSession session) {
         try {
         	Long raidId = request.getRaidId();

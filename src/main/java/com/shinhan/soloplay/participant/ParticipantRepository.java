@@ -23,6 +23,6 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
 	List<ParticipantEntity> findAdditionalParticipant(Long raidId, Long participantId);
 	
 	@Modifying
-	@Query("UPDATE ParticipantEntity p SET p.isRewarded = 2 WHERE p.participantId = :participantId")
-	int updateIsRewarded(Long participantId);
+	@Query("UPDATE ParticipantEntity p SET p.isRewarded = :isRewarded WHERE p.participantId = :participantId")
+	int updateIsRewarded(Long participantId, int isRewarded);
 }
