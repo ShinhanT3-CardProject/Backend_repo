@@ -2,11 +2,11 @@ package com.shinhan.soloplay.theme;
 
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -67,7 +67,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     		
     		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
     	}
-    	result.put("themeSunCategoryName", subCategories);
+    	result.put("themeSubCategoryName", subCategories);
     	
     	return result;
     }
@@ -113,17 +113,41 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return result;
 	}
     
-	// 테마 수정 (나의 테마 상세조회에서 가능)
+	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
 	@Override
 	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1) {
 		ThemeEntity themeEntity = themeRepository1.findById(themeId)
 												.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
-		//수정 진행에 대한 로직 구현
+		
 		themeEntity.setThemeName(themeRegisterDTO1.getThemeName());
 		themeEntity.setThemeDescription(themeRegisterDTO1.getThemeDescription());
 		themeEntity.setThemeIsPublic(themeRegisterDTO1.getThemeIsPublic());
-		// 테마 대분류, 소분류 추가를 위해 Entity관련 작업을 해야 함 -> GPT 질문
+		themeEntity.setThemeIsActivated(themeRegisterDTO1.getThemeIsActivated());
+		themeEntity.setThemeUpdateDate(LocalDateTime.now());
 		
+		List<ThemeContentEntity> updateContents = themeEntity.getThemeContents();
+		List<SubCategoryEntity> updateCategories = themeRegisterDTO1.getSubCategory();
+		
+		int contentSize = updateContents.size();
+		int CategorySize = updateCategories.size();
+		
+		for(int i = 0; i < contentSize && i < CategorySize; i++) {
+			ThemeContentEntity content = updateContents.get(i);
+			content.setSubCategory(updateCategories.get(i));
+		}
+		
+		if (CategorySize > contentSize) {
+			for (int i = contentSize ; i < CategorySize; i++) {
+				ThemeContentEntity updatedContents = ThemeContentEntity.builder()
+																		.theme(themeEntity)
+																		.subCategory(updateCategories.get(i))
+																		.themeIsSuccess(false)
+																		.build();
+				updateContents.add(updatedContents);
+			}
+		}
+		
+		// 설정된 Entity 저장
 		ThemeEntity updateTheme = themeRepository1.save(themeEntity);
 		return convertToRegisterDTO(updateTheme);
 	}
@@ -166,13 +190,6 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	    // 저장된 ThemeEntity를 DTO로 변환
 	    return convertToRegisterDTO(savedTheme);
 	}
-
-	
-	// 테마 불러오기 (테마 등록, 테마 수정에서 가능)
-	@Override
-	public List<ThemeSearchDTO1> loadOtherTheme(Long themeId) {
-		return themeRepository1.loadOtherTheme(themeId);
-	}
 	
 	//없어도 되는지 실험
 	
@@ -214,7 +231,6 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 	    // 첫 번째 SubCategoryEntity를 사용해 MainCategoryEntity 참조
 	    MainCategoryEntity mainCategoryEntity = subCategories.get(0).getMainCategory();
-	    String themeBackground = (mainCategoryEntity != null) ? mainCategoryEntity.getThemeBackground() : null;
 
 	    return ThemeRegisterDTO1.builder()
 	            .themeId(themeEntity.getThemeId())
