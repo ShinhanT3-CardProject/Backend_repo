@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.soloplay.theme.MainCategoryService3;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
+
 @RestController
 @RequestMapping("/card")
 public class CardController {
@@ -57,8 +60,9 @@ public class CardController {
 	}
 
 	@GetMapping("/history")
-	public Map<String, Map<String, Object>> getUserCardsAndUsageHistory(@RequestParam String userId) {
+	public Map<String, Map<String, Object>> getUserCardsAndUsageHistory(HttpSession session) {
 	    Map<String, Map<String, Object>> result = new HashMap<>();
+	    String userId = (String) session.getAttribute("loginUser");
 
 	    // 1. 사용자 소지 카드 목록
 	    List<UserCardDTO> userCards = userCardService.getUserCardsByUserId(userId);
