@@ -85,7 +85,9 @@ public class ParticipantServiceImpl implements ParticipantService {
 			int totalHitPoint = raidEntity.getTotalHitPoint();
 			int reward = raidEntity.getReward();
 			int contribution = userRewardNotGiven(raidId, userId);
-			double buff = 1.0; // 임의의 값으로 우선 적용
+			int buff = 1; // 임의의 값으로 우선 적용
+			
+			
 			double result = reward*contribution/totalHitPoint*buff;
 			return (int)result;
 		}else {
