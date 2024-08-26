@@ -63,14 +63,12 @@ public class AuthController {
         
         try {
             AuthDTO loginUser = (AuthDTO) authService.loadUserByUsername(userId);
-            
+            System.out.println(loginUser);
             if (passwordEncoder.matches(userPassword, loginUser.getUser().getUserPassword())) {
                 // 기존 세션을 무효화하고 새로운 세션을 생성하여 세션 고정 공격을 방지합니다.
-                request.getSession().invalidate();
-                HttpSession newSession = request.getSession(true);
                 
-                newSession.setAttribute("loginUser", loginUser.getUsername());
-                newSession.setAttribute("loginUserName", loginUser.getUser().getUserName());
+            	httpSession.setAttribute("loginUser", loginUser.getUsername());
+            	httpSession.setAttribute("loginUserName", loginUser.getUser().getUserName());
                 
                 responseBody.put("message", "로그인 성공");
                 responseBody.put("user", loginUser.getUser()); // 필요한 사용자 정보 포함
@@ -113,9 +111,6 @@ public class AuthController {
         // 세션 무효화
         session.removeAttribute("loginUser");
         session.removeAttribute("loginUserName");
-        System.out.println("logout");
         return ResponseEntity.ok("로그아웃 성공");
     }
-    
-
 }
