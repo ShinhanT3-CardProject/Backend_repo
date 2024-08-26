@@ -33,7 +33,7 @@ public class OpenAIService {
     }
 
     public ThemeResponseDTO getTheme(BucketListRequestDTO request) {
-        String prompt = "다음 버킷리스트 항목들을 분석하여 아래 주어진 테마들 중에서 가장 관련성이 높은 테마를 선택하고, 그 이유를 3문장으로 리스트 형식으로 간략하게 존댓말로 설명해주세요. 테마 추천 결과는 가능한 테마들 중에 선별해서 무조건 테마만 단어 형태로 알려주고, 설명은 전체적인 이유로 답변해주세요. 한국어로 답변해주세요.\n\n" +
+        String prompt = "다음 버킷리스트 항목들을 분석하여 아래 주어진 테마들 중에서 가장 관련성이 높은 테마를 선택하고, 그 이유를 3가지 리스트 형식으로 이유만 간략하게 설명해주세요. 테마 선택 결과에 대해서는 무조건 가능한 테마들 중에서만 선택하여 다른 부가적인 말은 하지 말고 단어로만 알려주세요. 추천에 대한 이유는 전체적인 이유로 답변해주시고, 친근한 말투로 한국어로 답변해주세요.\n\n" +
                         "가능한 테마들: " + String.join(", ", predefinedThemes.keySet()) + "\n\n" +
                         "버킷리스트: " + String.join(", ", request.getBucketList());
 
@@ -49,7 +49,7 @@ public class OpenAIService {
 
     public SubCategoriesDTO getRecommendedSubcategories(String theme, List<String> details) {
         // GPT에게 소분류를 선택하도록 요청하는 프롬프트 생성
-        String prompt = "다음 테마와 세부 설명을 기반으로 해당 테마 내에서 가장 관련성이 높은 소분류 항목들을 5개 추천해주세요. 소분류만 순수하게 단어 형태로 적어주세요.\n\n" +
+        String prompt = "다음 테마와 세부 설명을 기반으로 해당 테마 내에서 가장 관련성이 높은 소분류 항목들을 정해진 목록 중에서만 5개 선택해서 추천해주세요. 소분류만 순수하게 단어 형태로 적어주세요.\n\n" +
                         "테마: " + theme + "\n" +
                         "세부 설명: " + String.join(", ", details) + "\n\n" +
                         "가능한 소분류 항목들: " + String.join(", ", predefinedThemes.get(theme));

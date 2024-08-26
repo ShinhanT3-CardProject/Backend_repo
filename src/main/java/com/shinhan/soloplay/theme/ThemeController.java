@@ -1,6 +1,5 @@
 package com.shinhan.soloplay.theme;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,6 @@ public class ThemeController {
 	public ResponseEntity<?> findAllTheme() {
 		try {
 			Map<Long, Map<String, String>> findAllTheme = themeService1.findAllTheme();
-			System.err.println("findAllTheme 에러체크 : " + findAllTheme.size());
 			return ResponseEntity.ok(findAllTheme);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,11 +35,12 @@ public class ThemeController {
 		}
 	}
 	
-	// 테마 상세 조회 - 완료
+	// 테마 상세 조회, 나의 테마 상세조회 - 완료
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
 			Map<String ,?>  findThemeDetail = themeService1.findThemeDetail(themeId);
+			System.out.println("findThemeDetail : " + findThemeDetail);
 			return ResponseEntity.ok(findThemeDetail);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 찾을 수 없습니다.");
@@ -63,18 +62,6 @@ public class ThemeController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
 		}
 		
-	}
-	
-	// 나의 테마 상세조회 - 완료
-	@GetMapping("/findMyThemeDetail/{themeId}")
-	public ResponseEntity<?> findMyThemeDetail(@PathVariable Long themeId) {
-		try {
-			Map<String ,?> findMyThemeDetail = themeService1.findThemeDetail(themeId);
-			return ResponseEntity.ok(findMyThemeDetail);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-		}
 	}
 	
 	// 테마 수정 (나의 테마 상세조회에서 가능)
@@ -107,27 +94,9 @@ public class ThemeController {
 	// 테마 등록
 	@PostMapping("/insertTheme")
 	public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO1 themeRegisterDTO1) {
-		try {
-			ThemeRegisterDTO1 insertTheme = themeService1.insertTheme(themeRegisterDTO1);
-			return ResponseEntity.status(HttpStatus.CREATED).body(insertTheme);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-		}
-	}
-	
-	// 테마 불러오기 (테마 등록, 테마 수정에서 가능)
-	@GetMapping("/loadOtherTheme/{themeId}")
-	public ResponseEntity<?> loadOtherTheme(@PathVariable Long themeId) {
-		try {
-			List<ThemeSearchDTO1> loadOtherTheme = themeService1.loadOtherTheme(themeId);
-			return ResponseEntity.ok(loadOtherTheme);
-		} catch (IllegalStateException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 불러오는 중 오류가 발생했습니다.");
-		}catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-		}
+	    // 여기서 DTO를 서비스로 전달합니다.
+	    ThemeRegisterDTO1 insertTheme = themeService1.insertTheme(themeRegisterDTO1);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(insertTheme);
 	}
 	
 }

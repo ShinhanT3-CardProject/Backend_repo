@@ -18,14 +18,6 @@ public interface ThemeRepository1 extends JpaRepository<ThemeEntity, Long> {
 	
     // 나의 테마 조회 - 완료
 	List<ThemeEntity> findByUser_UserId(String userId);
-	
-	// 테마 수정 (나의 테마 상세조회에서 가능)
-//	@Query("SELECT * from ThemeEntity")
-//	ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1);
-		
-	// 테마 등록
-//	@Query("SELECT * from ThemeEntity")
-//	ThemeRegisterDTO1 insertTheme(ThemeRegisterDTO1 themeRegisterDTO1);
 
 	// 테마 불러오기 (테마 등록, 테마 수정에서 가능)
 	@Query("SELECT new com.shinhan.soloplay.theme.ThemeSearchDTO1(t.themeId, t.user, t.themeName, t.themeDescription, t.themeIsActivated, t.themeIsPublic, t.themeCreateDate, t.themeUpdateDate, mc.themeMainCategoryId, mc.themeMainCategoryName, mc.themeBackground, sc.themeSubCategoryName) " +

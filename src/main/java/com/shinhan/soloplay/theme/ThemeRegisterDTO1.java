@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.theme;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -43,12 +44,9 @@ public class ThemeRegisterDTO1 {
 	LocalDateTime themeUpdateDate;
 	
 	//테마 소분류 코드 : FK - ThemeContentEntity
-	SubCategoryEntity subCategory;
+	 private List<SubCategoryEntity> subCategory;
 	
 	//테마 대분류 코드 : FK - SubCategoryEntity
 	MainCategoryEntity mainCategory;
-	
-	//테마 배경이미지 - MainCategoryEntity
-	String themeBackground;
 	
 }
