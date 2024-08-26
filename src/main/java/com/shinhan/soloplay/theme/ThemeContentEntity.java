@@ -43,5 +43,4 @@ public class ThemeContentEntity {
     @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
     private SubCategoryEntity subCategory;
 
-    // Getters and Setters
 }

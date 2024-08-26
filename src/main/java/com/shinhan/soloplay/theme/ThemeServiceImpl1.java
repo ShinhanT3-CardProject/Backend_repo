@@ -1,5 +1,8 @@
 package com.shinhan.soloplay.theme;
 
+
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 				Map<String, String> nameAndBack = new HashMap<>();
 				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
 				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
 		
 				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
 			});
@@ -38,14 +42,8 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		
 		return result;
   }
-	
-	// 전체 테마 조회 (카테고리별 필터링)
-	@Override
-	public List<ThemeSearchDTO1> findAllThemeFilter(Long themeMainCategoryId) {
-		return themeRepository1.findAllThemeFilter(themeMainCategoryId);
-	}
     
-	// 테마 상세 조회 - 블러오기까지는 완료, 복수의 테마를 담아오려면 조치 필요
+	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
     public Map<String ,?> findThemeDetail(Long themeId) {
     	Map<String, Object> result = new HashMap<>(); //맨 마지막에 리턴할 값을 담아주는 용도
@@ -63,12 +61,18 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     	for(Long contentId:contents.keySet()) {
     		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
     		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+    		
+    		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
+    		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
+    		
     		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
     	}
     	result.put("themeSunCategoryName", subCategories);
     	
     	return result;
     }
+
+//    for문의 다른 방법
 //    	contents.keySet().stream().forEach(contentId -> {
 //    		
 //    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
@@ -77,17 +81,37 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 //    		
 //    	});
 	
-	// 나의 테마 조회
-	@Override
-	public List<ThemeSearchDTO1> findMyTheme(String userId) {
-		return themeRepository1.findMyTheme(userId);
-	}
-
-	// 나의 테마 상세조회
+    // 나의 테마 조회 - 완료
     @Override
-    public ThemeSearchDTO1 findMyThemeDetail(Long themeId) {
-    	return findMyThemeDetail(themeId);
-    }
+	public Map<Long, Map<String, String>> findMyTheme(String userId) {
+		Map<Long, Map<String, String>> result = new HashMap<>();
+		
+		List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
+		System.out.println("myThemes : " + myThemes);
+		Map<Long, ThemeContentEntity> contents = new HashMap<>();
+		myThemes.stream().forEach(theme->{
+			
+			if (theme.getThemeContents().isEmpty()) {
+				System.out.println("themeContents가 비어있습니다.");
+			}
+			
+			theme.getThemeContents().stream().forEach(content -> {
+				contents.put(content.getThemeContentId(), content);
+			});
+			
+			contents.keySet().stream().forEach(contentId -> {
+				Map<String, String> nameAndBack = new HashMap<>();
+				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
+				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
+				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
+				
+				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
+			});
+		});
+		System.out.println("result : " + result);
+		
+		return result;
+	}
     
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	@Override
@@ -104,7 +128,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return convertToRegisterDTO(updateTheme);
 	}
 	
-	// 테마 삭제 (나의 테마 상세조회에서 가능)
+	// 테마 삭제 (나의 테마 상세조회에서 가능) - 완료
 	@Override
 	public void deleteTheme(Long themeId) {
 		themeRepository1.deleteById(themeId);
@@ -113,16 +137,44 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	// 테마 등록
 	@Override
 	public ThemeRegisterDTO1 insertTheme(ThemeRegisterDTO1 themeRegisterDTO1) {
-		ThemeEntity themeEntity = convertToEntity(themeRegisterDTO1);
-		ThemeEntity savedTheme = themeRepository1.save(themeEntity);
-		return convertToRegisterDTO(savedTheme);
+	    // ThemeEntity 생성
+	    ThemeEntity themeEntity = ThemeEntity.builder()
+	            .themeName(themeRegisterDTO1.getThemeName())
+	            .themeDescription(themeRegisterDTO1.getThemeDescription())
+	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
+	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
+	            .user(themeRegisterDTO1.getUser())
+	            .themeCreateDate(LocalDateTime.now())
+	            .themeUpdateDate(LocalDateTime.now())
+	            .build();
+
+	    // SubCategoryEntity 리스트를 ThemeContentEntity로 변환하여 ThemeEntity에 연결
+	    List<ThemeContentEntity> themeContents = themeRegisterDTO1.getSubCategory().stream()
+	            .map(subCategory -> ThemeContentEntity.builder()
+	                    .theme(themeEntity)  // ThemeEntity와 연결
+	                    .subCategory(subCategory)  // SubCategoryEntity와 연결
+	                    .themeIsSuccess(false)  // 초기 상태를 설정
+	                    .build())
+	            .collect(Collectors.toList());
+
+	    // ThemeEntity에 ThemeContentEntity 리스트를 설정
+	    themeEntity.setThemeContents(themeContents);
+
+	    // ThemeEntity 저장
+	    ThemeEntity savedTheme = themeRepository1.save(themeEntity);
+
+	    // 저장된 ThemeEntity를 DTO로 변환
+	    return convertToRegisterDTO(savedTheme);
 	}
+
 	
 	// 테마 불러오기 (테마 등록, 테마 수정에서 가능)
 	@Override
 	public List<ThemeSearchDTO1> loadOtherTheme(Long themeId) {
 		return themeRepository1.loadOtherTheme(themeId);
 	}
+	
+	//없어도 되는지 실험
 	
 	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
 		// 첫 번째 ThemeContentEntity를 가져와서 사용
@@ -149,49 +201,64 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	}
 	
 	private ThemeRegisterDTO1 convertToRegisterDTO(ThemeEntity themeEntity) {
-		// 첫 번째 ThemeContentEntity를 가져와서 사용
-		ThemeContentEntity themeContentEntity = themeEntity.getThemeContents().stream().findFirst()
-															.orElseThrow(() -> new IllegalStateException("ThemeContentEntity가 없습니다."));
-		
-		SubCategoryEntity subCategoryEntity = themeContentEntity.getSubCategory();
-		MainCategoryEntity mainCategoryEntity = subCategoryEntity.getMainCategory();
-		
-		return ThemeRegisterDTO1.builder()
-								.themeId(themeEntity.getThemeId())
-								.user(themeEntity.getUser())
-								.themeName(themeEntity.getThemeName())
-								.themeDescription(themeEntity.getThemeDescription())
-								.themeIsActivated(themeEntity.getThemeIsActivated())
-								.themeIsPublic(themeEntity.getThemeIsPublic())
-								.themeCreateDate(themeEntity.getThemeCreateDate())
-								.themeUpdateDate(themeEntity.getThemeUpdateDate())
-								.subCategory(subCategoryEntity)
-								.mainCategory(mainCategoryEntity)
-								.themeBackground(mainCategoryEntity.getThemeBackground())
-                                .build();
+	    List<ThemeContentEntity> themeContents = themeEntity.getThemeContents();
+
+	    if (themeContents.isEmpty()) {
+	        throw new IllegalStateException("ThemeContentEntity가 없습니다.");
+	    }
+
+	    // SubCategoryEntity에서 MainCategoryEntity의 themeBackground 가져오기
+	    List<SubCategoryEntity> subCategories = themeContents.stream()
+	            .map(ThemeContentEntity::getSubCategory)
+	            .collect(Collectors.toList());
+
+	    // 첫 번째 SubCategoryEntity를 사용해 MainCategoryEntity 참조
+	    MainCategoryEntity mainCategoryEntity = subCategories.get(0).getMainCategory();
+	    String themeBackground = (mainCategoryEntity != null) ? mainCategoryEntity.getThemeBackground() : null;
+
+	    return ThemeRegisterDTO1.builder()
+	            .themeId(themeEntity.getThemeId())
+	            .user(themeEntity.getUser())
+	            .themeName(themeEntity.getThemeName())
+	            .themeDescription(themeEntity.getThemeDescription())
+	            .themeIsActivated(themeEntity.getThemeIsActivated())
+	            .themeIsPublic(themeEntity.getThemeIsPublic())
+	            .themeCreateDate(themeEntity.getThemeCreateDate())
+	            .themeUpdateDate(themeEntity.getThemeUpdateDate())
+	            .subCategory(subCategories)
+	            .mainCategory(mainCategoryEntity)
+	            .build();
 	}
+
+
+
 	
 	//Entity 변환 메서드 ThemeRegisterDTO1 -> ThemeEntity
 	private ThemeEntity convertToEntity(ThemeRegisterDTO1 themeRegisterDTO1) {
-		// 새로운 ThemeEntity 생성
-		ThemeEntity themeEntity = ThemeEntity.builder()
-											.themeId(themeRegisterDTO1.getThemeId())
-											.user(themeRegisterDTO1.getUser())
-											.themeName(themeRegisterDTO1.getThemeName())
-											.themeDescription(themeRegisterDTO1.getThemeDescription())
-											.themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
-											.themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
-											.themeCreateDate(themeRegisterDTO1.getThemeCreateDate())
-											.themeUpdateDate(themeRegisterDTO1.getThemeUpdateDate())
-											.build();
+	    // ThemeEntity 생성
+	    ThemeEntity themeEntity = ThemeEntity.builder()
+	            .themeName(themeRegisterDTO1.getThemeName())
+	            .themeDescription(themeRegisterDTO1.getThemeDescription())
+	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
+	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
+	            .user(themeRegisterDTO1.getUser())
+	            .themeCreateDate(LocalDateTime.now())
+	            .themeUpdateDate(LocalDateTime.now())
+	            .build();
 
-		//ThemeContentEntity 생성 및 연결
-		ThemeContentEntity themeContentEntity = ThemeContentEntity.builder()
-//																	.theme(themeEntity)
-																	.subCategory(themeRegisterDTO1.getSubCategory())
-																	.build();
-		themeEntity.setThemeContents(List.of(themeContentEntity));
-		
-		return themeEntity;
+	    // SubCategoryEntity 리스트를 ThemeContentEntity로 변환하여 ThemeEntity에 연결
+	    List<ThemeContentEntity> themeContents = themeRegisterDTO1.getSubCategory().stream()
+	            .map(subCategory -> ThemeContentEntity.builder()
+	                    .theme(themeEntity)  // ThemeEntity와 연결
+	                    .subCategory(subCategory)  // SubCategoryEntity와 연결
+	                    .themeIsSuccess(false)  // 초기 상태를 설정
+	                    .build())
+	            .collect(Collectors.toList());
+
+	    // ThemeEntity에 ThemeContentEntity 리스트를 설정
+	    themeEntity.setThemeContents(themeContents);
+
+	    return themeEntity;
 	}
+
 }

@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class SubCategoryDTO {
     private Long themeSubCategoryId;
     private String themeSubCategoryName;
+    private String themeMainCategoryName;
 }
+
