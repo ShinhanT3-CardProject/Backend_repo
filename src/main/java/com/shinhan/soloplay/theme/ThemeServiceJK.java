@@ -7,4 +7,6 @@ public interface ThemeServiceJK {
 	public List<MainCategoryEntity> getAllMainCategories();
 
     public List<SubCategoryEntity> getSubCategoriesByMainCategory(Long mainCategoryId);
+
+    public int getIsSuccess(String userId);
 }

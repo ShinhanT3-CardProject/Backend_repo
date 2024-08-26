@@ -22,8 +22,8 @@ public class ThemeRegisterDTO1 {
 	//테마 코드 : PK - ThemeEntity
 	Long themeId;
 	
-	//유저 아이디 : FK - ThemeEntity
-	UserEntity user;
+    // 유저 ID : FK - ThemeEntity (UserDTO로 변경)
+    String userId;
 	
 	//테마 이름 - ThemeEntity
 	String themeName;

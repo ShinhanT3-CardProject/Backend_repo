@@ -11,7 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.shinhan.soloplay.user.UserDTO;
+import com.shinhan.soloplay.user.UserEntity;
+import com.shinhan.soloplay.user.UserRepository;
+import com.shinhan.soloplay.user.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ThemeController {
 	
 	final ThemeService1 themeService1;
+	final ThemeServiceImplJK themeServiceImplJK;
 	
 	// 전체 테마 조회 (공개여부 참) - 완료
 	@GetMapping("/findAllTheme")
@@ -92,11 +99,23 @@ public class ThemeController {
 	}
 	
 	// 테마 등록
-	@PostMapping("/insertTheme")
-	public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO1 themeRegisterDTO1) {
-	    // 여기서 DTO를 서비스로 전달합니다.
-	    ThemeRegisterDTO1 insertTheme = themeService1.insertTheme(themeRegisterDTO1);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(insertTheme);
-	}
+    @PostMapping("/insertTheme")
+    public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO1 themeRegisterDTO1, HttpSession httpSession) {
+        // 세션에서 로그인된 사용자 ID 가져오기
+        String userId = (String) httpSession.getAttribute("loginUser");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        // DTO에 사용자 ID 설정
+        themeRegisterDTO1.setUserId(userId);
+
+        // 서비스 계층을 통해 테마 저장
+        ThemeRegisterDTO1 savedThemeDTO = themeService1.insertTheme(themeRegisterDTO1);
+
+        // 생성된 테마 정보 반환
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedThemeDTO);
+    }
+    
 	
 }
