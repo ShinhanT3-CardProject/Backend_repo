@@ -17,4 +17,5 @@ public class BattleResponseDTO {
 	private RaidDTO raid;
 	private List<ParticipantDTO> participants;
 	private int contribution;
+	private int buff;
 }

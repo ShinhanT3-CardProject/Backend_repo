@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.user.UserEntity;
+import com.shinhan.soloplay.user.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class ThemeServiceImpl1 implements ThemeService1 {
 	
 	private final ThemeRepository1 themeRepository1;
+	private final UserRepository userRepository;
+	
 
 	// 전체 테마 조회 (공개여부 참) - 완료
 	@Override
@@ -161,13 +166,17 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	// 테마 등록
 	@Override
 	public ThemeRegisterDTO1 insertTheme(ThemeRegisterDTO1 themeRegisterDTO1) {
+		 // UserEntity 조회
+	    UserEntity userEntity = userRepository.findById(themeRegisterDTO1.getUserId())
+	                                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID"));
+
 	    // ThemeEntity 생성
 	    ThemeEntity themeEntity = ThemeEntity.builder()
 	            .themeName(themeRegisterDTO1.getThemeName())
 	            .themeDescription(themeRegisterDTO1.getThemeDescription())
 	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
 	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
-	            .user(themeRegisterDTO1.getUser())
+	            .user(userEntity)
 	            .themeCreateDate(LocalDateTime.now())
 	            .themeUpdateDate(LocalDateTime.now())
 	            .build();
@@ -224,7 +233,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	        throw new IllegalStateException("ThemeContentEntity가 없습니다.");
 	    }
 
-	    // SubCategoryEntity에서 MainCategoryEntity의 themeBackground 가져오기
+	    // SubCategoryEntity 리스트를 추출
 	    List<SubCategoryEntity> subCategories = themeContents.stream()
 	            .map(ThemeContentEntity::getSubCategory)
 	            .collect(Collectors.toList());
@@ -232,9 +241,12 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	    // 첫 번째 SubCategoryEntity를 사용해 MainCategoryEntity 참조
 	    MainCategoryEntity mainCategoryEntity = subCategories.get(0).getMainCategory();
 
+	    // UserEntity에서 필요한 정보만 추출 (또는 UserDTO로 변환)
+	    String userId = themeEntity.getUser().getUserId();
+
 	    return ThemeRegisterDTO1.builder()
 	            .themeId(themeEntity.getThemeId())
-	            .user(themeEntity.getUser())
+	            .userId(userId)  // UserEntity 대신 userId를 사용하거나 UserDTO로 변환할 수 있습니다.
 	            .themeName(themeEntity.getThemeName())
 	            .themeDescription(themeEntity.getThemeDescription())
 	            .themeIsActivated(themeEntity.getThemeIsActivated())
@@ -251,13 +263,18 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	
 	//Entity 변환 메서드 ThemeRegisterDTO1 -> ThemeEntity
 	private ThemeEntity convertToEntity(ThemeRegisterDTO1 themeRegisterDTO1) {
+		
+	    // UserEntity 조회
+	    UserEntity userEntity = userRepository.findById(themeRegisterDTO1.getUserId())
+	                                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID"));
+
 	    // ThemeEntity 생성
 	    ThemeEntity themeEntity = ThemeEntity.builder()
 	            .themeName(themeRegisterDTO1.getThemeName())
 	            .themeDescription(themeRegisterDTO1.getThemeDescription())
 	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
 	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
-	            .user(themeRegisterDTO1.getUser())
+	            .user(userEntity)
 	            .themeCreateDate(LocalDateTime.now())
 	            .themeUpdateDate(LocalDateTime.now())
 	            .build();

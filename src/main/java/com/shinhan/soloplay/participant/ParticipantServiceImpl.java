@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.raid.RaidRepository;
+import com.shinhan.soloplay.theme.ThemeServiceJK;
 import com.shinhan.soloplay.user.UserEntity;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,6 +19,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 	
 	final ParticipantRepository participantRepository;
 	final RaidRepository raidRepository;
+	final ThemeServiceJK themeService;
 
 	@Override
 	public List<ParticipantDTO> findByRaid(Long raidId) {
@@ -77,13 +80,16 @@ public class ParticipantServiceImpl implements ParticipantService {
 
 
 	@Override
+	@Transactional
 	public int userReward(Long raidId, String userId) {
 		RaidEntity raidEntity = raidRepository.findById(raidId).get();
 		if (raidEntity.getHitPoint() == 0) {
 			int totalHitPoint = raidEntity.getTotalHitPoint();
 			int reward = raidEntity.getReward();
 			int contribution = userRewardNotGiven(raidId, userId);
-			double buff = 1.0; // 임의의 값으로 우선 적용
+			int buff = 1;
+			if (themeService.getIsSuccess(userId) == 5) buff = 2;
+			
 			double result = reward*contribution/totalHitPoint*buff;
 			return (int)result;
 		}else {
@@ -111,7 +117,10 @@ public class ParticipantServiceImpl implements ParticipantService {
 		}
 		
 		participantList.stream()
-			.map(entity -> participantRepository.updateIsRewarded(entity.getParticipantId()));
+			.forEach(entity -> {
+				int updatedRows = participantRepository.updateIsRewarded(entity.getParticipantId(), 2);
+				System.out.println("Updated Rows: " + updatedRows);
+			});
 		
 		return result;
 	}

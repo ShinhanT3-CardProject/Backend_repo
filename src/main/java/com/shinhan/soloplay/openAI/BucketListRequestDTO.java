@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.openAI;
 
 import java.util.List;
 

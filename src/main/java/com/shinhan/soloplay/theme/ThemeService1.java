@@ -13,7 +13,7 @@ public interface ThemeService1 {
 	// 나의 테마 조회 - 완료
 	public Map<Long, Map<String, String>> findMyTheme(String userId);
 	
-	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
+	// 테마 수정 (나의 테마 상세조회에서 가능)
 	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1);
 	
 	// 테마 삭제 (나의 테마 상세조회에서 가능)

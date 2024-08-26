@@ -1,8 +1,6 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.openAI;
 
 import java.util.List;
-
-import com.shinhan.soloplay.theme.OpenAIRequestDTO.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
