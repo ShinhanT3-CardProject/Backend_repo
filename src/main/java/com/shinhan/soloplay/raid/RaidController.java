@@ -16,6 +16,7 @@ import com.shinhan.soloplay.participant.ParticipantService;
 import com.shinhan.soloplay.point.PointDTO;
 import com.shinhan.soloplay.point.PointService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -67,11 +68,10 @@ public class RaidController {
 	}
 	
 	@PostMapping("/reward")
-	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request) {
+	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request, HttpSession session) {
         try {
         	Long raidId = request.getRaidId();
-//    		String userId = (String)httpSession.getAttribute("loginUser");
-        	String userId = "user_2";
+    		String userId = (String)session.getAttribute("loginUser");
         	int reward = participantService.userReward(raidId, userId);
         	String message = "";
         	
