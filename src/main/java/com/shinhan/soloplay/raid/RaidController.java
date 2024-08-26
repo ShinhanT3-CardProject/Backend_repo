@@ -68,10 +68,12 @@ public class RaidController {
 	}
 	
 	@PostMapping("/reward")
-	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request, HttpSession httpSession) {
+
+	public ResponseEntity<String> givePoint(@RequestBody RaidRewardRequestDTO request, HttpSession session) {
         try {
         	Long raidId = request.getRaidId();
-    		String userId = (String)httpSession.getAttribute("loginUser");
+    		String userId = (String)session.getAttribute("loginUser");
+
         	int reward = participantService.userReward(raidId, userId);
         	String message = "";
         	
