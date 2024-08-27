@@ -27,4 +27,5 @@ public interface ThemeService1 {
 	
 	// 테마 성공 보상 수여
 	public int updateThemeIsRewarded(Long themeId);
+	
 }

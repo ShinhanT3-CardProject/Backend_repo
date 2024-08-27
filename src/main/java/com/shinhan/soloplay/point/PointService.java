@@ -20,6 +20,6 @@ public interface PointService {
     int createPoint(String userId, PointDTO pointDTO);
     
     //스탬프 미션 달성시 랜덤 포인트 지급
-    int giveRandomPointReward(String userId);
+    int giveRandomPointReward(String userId, Long themeContentId);
 	
 }

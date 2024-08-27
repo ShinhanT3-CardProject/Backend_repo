@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,23 +104,5 @@ public class PointController {
         }    	
     }
     
-    // 스탬프 미션 달성시 랜덤 포인트 지급
-    @PostMapping("/random")
-    public ResponseEntity<String> giveRandomPointReward(){
-    	String userId = (String) session.getAttribute("loginUser");
-    	if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
-        }
-
-        try {
-            int result = pointService.giveRandomPointReward(userId);
-            if (result == 1) {
-                return ResponseEntity.ok("성공적으로 랜덤 포인트가 지급되었습니다.");
-            } else {
-                return ResponseEntity.badRequest().body("포인트 지급에 실패했습니다.");
-            }
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+   
 }

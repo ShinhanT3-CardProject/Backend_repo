@@ -5,45 +5,56 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shinhan.soloplay.theme.ThemeContentRepository;
+import com.shinhan.soloplay.theme.ThemeRepository1;
 import com.shinhan.soloplay.user.UserEntity;
 import com.shinhan.soloplay.user.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
 
-	@Autowired
-	CouponRepository couponRepository;
-
-	@Autowired
-	CouponHistoryRepository couponHistoryRepository;
-
-	@Autowired
-	UserRepository userRepository;
+	final CouponRepository couponRepository;
+	final CouponHistoryRepository couponHistoryRepository;
+	final UserRepository userRepository;
+	final ThemeRepository1 themeRepository;
+	final ThemeContentRepository themeContentRepository;
 
 	@Override
 	@Transactional
-	public void issueCoupon(String userId, Long couponId) {
-		// 사용자 및 쿠폰 엔티티 조회
-		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		CouponEntity coupon = couponRepository.findById(couponId)
-				.orElseThrow(() -> new RuntimeException("Coupon not found"));
+	public String issueCoupon(String userId, Long couponId, Long themeId) {
+		
+		if (!themeRepository.findById(themeId).get().getThemeIsRewarded()
+				&& themeContentRepository.countAllByThemeIsSuccessTrue(themeId) == 5) {
+			
+			// 사용자 및 쿠폰 엔티티 조회
+			UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+			CouponEntity coupon = couponRepository.findById(couponId)
+					.orElseThrow(() -> new RuntimeException("Coupon not found"));
 
-		// 만료일 설정: 현재로부터 2주 뒤
-		LocalDateTime expirationDate = LocalDateTime.now().plusWeeks(2);
+			// 만료일 설정: 현재로부터 2주 뒤
+			LocalDateTime expirationDate = LocalDateTime.now().plusWeeks(2);
 
-		// 쿠폰 히스토리 생성
-		CouponHistoryEntity couponHistory = new CouponHistoryEntity();
-		couponHistory.setUser(user);
-		couponHistory.setCoupon(coupon);
-		couponHistory.setIsUsed(1); // 쿠폰 사용 가능 상태
-		couponHistory.setExpirationDate(Timestamp.valueOf(expirationDate));
+			// 쿠폰 히스토리 생성
+			CouponHistoryEntity couponHistory = new CouponHistoryEntity();
+			couponHistory.setUser(user);
+			couponHistory.setCoupon(coupon);
+			couponHistory.setIsUsed(1); // 쿠폰 사용 가능 상태
+			couponHistory.setExpirationDate(Timestamp.valueOf(expirationDate));
 
-		// 쿠폰 히스토리 저장
-		couponHistoryRepository.save(couponHistory);
+			// 쿠폰 히스토리 저장
+			couponHistoryRepository.save(couponHistory);
+            themeRepository.updateThemeIsRewarded(themeId);
+            
+            return "쿠폰 발급이 완료되었습니다.";
+    	}
+		
+		return "쿠폰 발급 대상이 아닙니다.";
 
 	}
 
