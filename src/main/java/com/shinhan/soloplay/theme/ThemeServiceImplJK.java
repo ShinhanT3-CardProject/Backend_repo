@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class ThemeServiceImplJK implements ThemeServiceJK {
 
     final MainCategoryRepositoryJK mainCategoryRepo;
-    final ThemeRepository1 themeRepository1;
+    final ThemeRepositoryJK themeRepositoryJK;
     final ThemeContentRepository themeContentRepository;
 
     public List<MainCategoryEntity> getAllMainCategories() {
@@ -27,8 +27,17 @@ public class ThemeServiceImplJK implements ThemeServiceJK {
     }
 
 	public int getIsSuccess(String userId) {
-		Long themeId = themeRepository1.findActivatedThemeIdsByUserId(userId);
+		Long themeId = themeRepositoryJK.findActivatedThemeIdsByUserId(userId);
 		return themeContentRepository.countAllByThemeIsSuccessTrue(themeId);
+	}
+
+	
+	public Long getIsActivated(String userId) {
+		return themeRepositoryJK.findThemeIsActivated(userId);
+	}
+
+	public Long getThemeCount(String userId) {
+		return themeRepositoryJK.findThemeCount(userId);
 	}
 
 }

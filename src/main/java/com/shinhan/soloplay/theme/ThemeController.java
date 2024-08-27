@@ -11,13 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.shinhan.soloplay.user.UserDTO;
-import com.shinhan.soloplay.user.UserEntity;
-import com.shinhan.soloplay.user.UserRepository;
-import com.shinhan.soloplay.user.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +41,6 @@ public class ThemeController {
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
 			Map<String ,?>  findThemeDetail = themeService1.findThemeDetail(themeId);
-			System.out.println("findThemeDetail : " + findThemeDetail);
 			return ResponseEntity.ok(findThemeDetail);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 찾을 수 없습니다.");
