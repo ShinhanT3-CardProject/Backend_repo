@@ -9,4 +9,8 @@ public interface ThemeServiceJK {
     public List<SubCategoryEntity> getSubCategoriesByMainCategory(Long mainCategoryId);
 
     public int getIsSuccess(String userId);
+    
+    public Long getIsActivated(String userId);
+    
+    public Long getThemeCount(String userId);
 }
