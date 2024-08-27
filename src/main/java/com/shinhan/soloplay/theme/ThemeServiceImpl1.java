@@ -21,6 +21,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	
 	private final ThemeRepository1 themeRepository1;
 	private final UserRepository userRepository;
+	final ThemeContentRepository themeContentRepository;
 	
 
 	// 전체 테마 조회 (공개여부 참) - 완료
@@ -77,14 +78,6 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     	return result;
     }
 
-//    for문의 다른 방법
-//    	contents.keySet().stream().forEach(contentId -> {
-//    		
-//    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
-//    		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
-//    		result.put("themeSunCategoryName", contents.get(contentId).getSubCategory().getThemeSubCategoryName());
-//    		
-//    	});
 	
     // 나의 테마 조회 - 완료
     @Override
@@ -200,6 +193,20 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	    return convertToRegisterDTO(savedTheme);
 	}
 	
+	// 테마 보상 대상 여부 확인
+	@Override
+	public boolean checkThemeSuccess(Long themeId) {
+		return !themeRepository1.findById(themeId).get().getThemeIsRewarded()
+					&& themeContentRepository.countAllByThemeIsSuccessTrue(themeId) == 5;
+	}
+	
+	// 테마 성공 보상 수여
+	@Override
+	public int updateThemeIsRewarded(Long themeId) {
+		return themeRepository1.updateThemeIsRewarded(themeId);
+	}
+	
+	
 	//없어도 되는지 실험
 	
 	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
@@ -293,5 +300,6 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 	    return themeEntity;
 	}
+
 
 }

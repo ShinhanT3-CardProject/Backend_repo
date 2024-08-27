@@ -3,6 +3,8 @@ package com.shinhan.soloplay.theme;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.persistence.CascadeType;
@@ -57,6 +59,10 @@ public class ThemeEntity {
 
     @Column(name = "THEME_UPDATE_DATE")
     private LocalDateTime themeUpdateDate;
+    
+    @Column(name = "THEME_IS_REWARDED", columnDefinition = "TINYINT(1)")
+    @ColumnDefault("false")
+    private Boolean themeIsRewarded;
 
     @OneToMany(mappedBy = "theme", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ThemeContentEntity> themeContents;

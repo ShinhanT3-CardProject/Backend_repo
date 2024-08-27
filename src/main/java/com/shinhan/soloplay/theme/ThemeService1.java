@@ -22,4 +22,10 @@ public interface ThemeService1 {
 	// 테마 등록
 	public ThemeRegisterDTO1 insertTheme(ThemeRegisterDTO1 themeRegisterDTO1);
 	
+	// 테마 성공 여부 확인
+	public boolean checkThemeSuccess(Long themeId);
+	
+	// 테마 성공 보상 수여
+	public int updateThemeIsRewarded(Long themeId);
+	
 }
