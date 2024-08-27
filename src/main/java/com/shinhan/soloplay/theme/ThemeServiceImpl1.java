@@ -206,6 +206,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return themeRepository1.updateThemeIsRewarded(themeId);
 	}
 	
+	
 	//없어도 되는지 실험
 	
 	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
@@ -300,8 +301,5 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	    return themeEntity;
 	}
 
-	
-
-	
 
 }

@@ -35,12 +35,8 @@ public class CouponController {
         	String userId = (String) session.getAttribute("loginUser");
         	Long couponId = request.getCouponId();
         	Long themeId = request.getThemeId();
-        	if (themeService.checkThemeSuccess(themeId)) {
-        		couponService.issueCoupon(userId, couponId);
-                themeService.updateThemeIsRewarded(themeId);
-                return ResponseEntity.ok("쿠폰이 발급되었습니다.");
-        	}
-            	return ResponseEntity.ok("발급 대상이 아닙니다.");
+        	String message = couponService.issueCoupon(userId, couponId, themeId);
+            return ResponseEntity.ok(message);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
