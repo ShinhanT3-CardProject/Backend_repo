@@ -1,19 +1,17 @@
 package com.shinhan.soloplay.coupon;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.shinhan.soloplay.theme.ThemeService1;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,6 +23,9 @@ public class CouponController {
     CouponService couponService;
 	
 	@Autowired
+	ThemeService1 themeService;
+	
+	@Autowired
 	HttpSession session;
 
     // 쿠폰 발급 API
@@ -33,8 +34,13 @@ public class CouponController {
         try {
         	String userId = (String) session.getAttribute("loginUser");
         	Long couponId = request.getCouponId();
-            couponService.issueCoupon(userId, couponId);
-            return ResponseEntity.ok("Coupon issued successfully");
+        	Long themeId = request.getThemeId();
+        	if (themeService.checkThemeSuccess(themeId)) {
+        		couponService.issueCoupon(userId, couponId);
+                themeService.updateThemeIsRewarded(themeId);
+                return ResponseEntity.ok("쿠폰이 발급되었습니다.");
+        	}
+            	return ResponseEntity.ok("발급 대상이 아닙니다.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

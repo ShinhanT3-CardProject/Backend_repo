@@ -3,6 +3,7 @@ package com.shinhan.soloplay.theme;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +32,8 @@ public interface ThemeRepository1 extends JpaRepository<ThemeEntity, Long> {
 				"JOIN sc.mainCategory mc " + 
 				"WHERE t.themeId = :themeId")
 	List<ThemeSearchDTO1> loadOtherTheme(@Param("themeId") Long themeId);
+	
+	@Modifying
+	@Query("UPDATE ThemeEntity t SET t.themeIsRewarded = TRUE WHERE t.themeId = :themeId")
+	int updateThemeIsRewarded(@Param("themeId") Long themeId);
 }

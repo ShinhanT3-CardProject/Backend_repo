@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class CouponIssueRequestDTO {
 
 	private String userId;
+	private Long themeId;
 	private Long couponId;
 }
