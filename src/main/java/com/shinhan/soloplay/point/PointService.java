@@ -18,5 +18,8 @@ public interface PointService {
 	
 	//새로운 포인트 생성/삭제 및 데이터 베이스 저장
     int createPoint(String userId, PointDTO pointDTO);
+    
+    //스탬프 미션 달성시 랜덤 포인트 지급
+    int giveRandomPointReward(String userId);
 	
 }

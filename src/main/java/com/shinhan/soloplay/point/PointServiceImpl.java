@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.point;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,24 @@ public class PointServiceImpl implements PointService {
         
         pointRepository.save(pointEntity);
         return 1; // 성공
+    }
+    
+    //스탬프 미션 달성시 랜덤 포인트 지급(1~500P)
+    public int giveRandomPointReward(String userId) {
+    	// 1 ~ 500 사이의 랜덤 포인트 생성
+        Random random = new Random();
+        int randomPoints = random.nextInt(500) + 1;  // 1부터 500까지의 값 생성
+
+        // PointDTO 생성
+        PointDTO pointDTO = PointDTO.builder()
+            .pointName("랜덤 포인트 지급")
+            .amount(randomPoints)
+            .isAdd(1) // 1은 포인트 추가를 의미
+            .category(1)
+            .build();
+
+        // 포인트 적립
+        return createPoint(userId, pointDTO); // 포인트 적립 메서드 호출
     }
 
     private PointDTO convertToDTO(PointEntity pointEntity) {
