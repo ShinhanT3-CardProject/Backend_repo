@@ -70,10 +70,13 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     		
     		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
     		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
+    		result.put("themeIsSuccess", contents.get(contentId).getThemeIsSuccess());
     		
     		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
     	}
     	result.put("themeSubCategoryName", subCategories);
+    	
+    	System.out.println("result : " + result);
     	
     	return result;
     }
