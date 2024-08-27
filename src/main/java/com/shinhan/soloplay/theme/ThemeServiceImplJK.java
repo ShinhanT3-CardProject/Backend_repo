@@ -32,9 +32,9 @@ public class ThemeServiceImplJK implements ThemeServiceJK {
 	}
 
 	
-	public Long getIsActivated(String userId) {
-		return themeRepositoryJK.findThemeIsActivated(userId);
-	}
+//	public Long getIsActivated(String userId) {
+//		return themeRepositoryJK.findThemeIsActivated(userId);
+//	}
 
 	public Long getThemeCount(String userId) {
 		return themeRepositoryJK.findThemeCount(userId);
