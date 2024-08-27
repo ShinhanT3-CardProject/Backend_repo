@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.raid.RaidRepository;
+import com.shinhan.soloplay.theme.ThemeServiceJK;
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 	
 	final ParticipantRepository participantRepository;
 	final RaidRepository raidRepository;
+	final ThemeServiceJK themeService;
 
 	@Override
 	public List<ParticipantDTO> findByRaid(Long raidId) {
@@ -85,8 +87,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 			int totalHitPoint = raidEntity.getTotalHitPoint();
 			int reward = raidEntity.getReward();
 			int contribution = userRewardNotGiven(raidId, userId);
-			int buff = 1; // 임의의 값으로 우선 적용
-			
+			int buff = 1;
+			if (themeService.getIsSuccess(userId) == 5) buff = 2;
 			
 			double result = reward*contribution/totalHitPoint*buff;
 			return (int)result;

@@ -15,6 +15,7 @@ import com.shinhan.soloplay.participant.ParticipantDTO;
 import com.shinhan.soloplay.participant.ParticipantService;
 import com.shinhan.soloplay.point.PointDTO;
 import com.shinhan.soloplay.point.PointService;
+import com.shinhan.soloplay.theme.ThemeServiceJK;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class RaidController {
 	final CardUsageHistoryService cardUsageHistoryService;
 	final ParticipantService participantService;
 	final PointService pointService;
+	final ThemeServiceJK themeService;
 	
 	@GetMapping("/battle/{raidId}")
 	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, HttpSession httpSession) {
@@ -36,10 +38,13 @@ public class RaidController {
 		List<ParticipantDTO> participants = participantService.findByRaid(raidId);
 		RaidDTO raid = raidService.findByRaidId(raidId);
 		int contribution = participantService.userContribution(raidId, userId);
+		int buff = themeService.getIsSuccess(userId)==5?2:1;
+		
 		BattleResponseDTO response = BattleResponseDTO.builder()
 				.raid(raid)
 				.participants(participants)
 				.contribution(contribution)
+				.buff(buff)
 				.build();
 		System.out.println(response);
 		return response;

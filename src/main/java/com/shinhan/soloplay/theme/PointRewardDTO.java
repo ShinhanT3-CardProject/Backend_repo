@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.coupon;
+package com.shinhan.soloplay.theme;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CouponIssueRequestDTO {
-
-	private Long themeId;
-	private Long couponId;
+public class PointRewardDTO {
+	private Long themeContentId;
 }

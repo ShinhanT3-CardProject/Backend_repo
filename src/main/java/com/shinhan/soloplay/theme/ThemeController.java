@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.shinhan.soloplay.point.PointService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +23,9 @@ public class ThemeController {
 	
 	final ThemeService1 themeService1;
 	final ThemeServiceImplJK themeServiceImplJK;
+	final PointService pointService;
+	final HttpSession session;
+	
 	
 	// 전체 테마 조회 (공개여부 참) - 완료
 	@GetMapping("/findAllTheme")
@@ -110,5 +113,26 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedThemeDTO);
     }
     
+    // 테마 미션 1개 달성 랜덤포인트
+    // 스탬프 미션 달성시 랜덤 포인트 지급
+    @PostMapping("/random")
+    public ResponseEntity<String> giveRandomPointReward(@RequestBody PointRewardDTO request){
+    	String userId = (String) session.getAttribute("loginUser");
+    	Long themeContentId = request.getThemeContentId();
+    	if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+        }
+
+        try {
+            int result = pointService.giveRandomPointReward(userId, themeContentId);
+            if (result > 0) {
+                return ResponseEntity.ok(result + " 포인트가 지급되었습니다.");
+            } else {
+                return ResponseEntity.badRequest().body("포인트 지급에 실패했습니다.");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 	
 }

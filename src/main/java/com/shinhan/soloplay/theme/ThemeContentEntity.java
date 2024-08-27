@@ -1,5 +1,7 @@
 package com.shinhan.soloplay.theme;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -42,5 +44,9 @@ public class ThemeContentEntity {
     @OneToOne
     @JoinColumn(name = "THEME_SUB_CATEGORY_ID")
     private SubCategoryEntity subCategory;
+    
+    @Column(name = "THEME_CONTENT_IS_REWARDED", columnDefinition = "TINYINT(1)")
+    @ColumnDefault("false")
+    private Boolean themeContentIsRewarded;
 
 }
