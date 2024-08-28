@@ -1,6 +1,7 @@
 package com.shinhan.soloplay.point;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PointService {
 	
@@ -21,5 +22,8 @@ public interface PointService {
     
     //스탬프 미션 달성시 랜덤 포인트 지급
     int giveRandomPointReward(String userId, Long themeContentId);
+    
+    //ID에 해당하는 카테고리별 포인트 비율을 계산
+    Map<String,Object> getCategoryData(String userId);
 	
 }

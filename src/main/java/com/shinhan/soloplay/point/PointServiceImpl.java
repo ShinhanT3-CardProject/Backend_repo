@@ -1,6 +1,8 @@
 package com.shinhan.soloplay.point;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,41 @@ public class PointServiceImpl implements PointService {
                 .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) // Adjust total by isAdd value
                 .sum();                                                                                                                                                                                                                    
         return Math.max(totalPoints, 0);
+    }
+    
+    // 사용자 ID에 해당하는 카테고리별 포인트 비율을 반환하는 메서드
+    @Override
+    public Map<String,Object> getCategoryData(String userId){
+    	UserEntity userEntity = UserEntity.builder().userId(userId).build();
+    	List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
+    	
+    	int totalPoints = getTotalPointsByUserId(userId);
+    	
+    	//카테고리별 총 포인트 계산
+    	Map<Integer, Integer> categoryPoints = pointEntities.stream()
+    			.collect(Collectors.groupingBy(
+    						PointEntity::getCategory,
+    						Collectors.summingInt(PointEntity-> PointEntity.getIsAdd()* PointEntity.getAmount())
+    					));
+    	
+    	Map<String, Double> categoryRatios = new HashMap<>();
+    	
+    	if(totalPoints>0) {
+    		categoryRatios.put("테마", categoryPoints.getOrDefault(1, 0)/(double)totalPoints *100);
+    		categoryRatios.put("레이드", categoryPoints.getOrDefault(2, 0)/(double)totalPoints *100);
+    		categoryRatios.put("기타", categoryPoints.getOrDefault(0, 0)/(double)totalPoints *100);
+    	}else {
+    		categoryRatios.put("테마", 0.0);
+            categoryRatios.put("레이드", 0.0);
+            categoryRatios.put("기타", 0.0);
+    	}
+    	
+    	Map<String,Object> result = new HashMap<>();
+    	result.put("categoryTotals", categoryPoints);
+    	result.put("categoryRatios", categoryRatios);
+    	
+    	
+    	return result;
     }
     
     // 사용자 ID에 해당하는 모든 포인트 내역을 반환하는 메서드

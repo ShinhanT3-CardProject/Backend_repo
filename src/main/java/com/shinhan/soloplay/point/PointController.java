@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,20 @@ public class PointController {
     	
     	int totalPoints = pointService.getTotalPointsByUserId(userId);
         return new ResponseEntity<>(totalPoints, HttpStatus.OK);
+    }
+    
+    //카테고리별 포인트 비율을 반환
+    @GetMapping("/calc-category")
+    public ResponseEntity<Map<String,Object>> getCategoryRatios(){
+    	String userId = (String) session.getAttribute("loginUser");
+    	
+    	if (userId == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }    	
+
+    	Map<String, Object> categoryData = pointService.getCategoryData(userId);
+        return ResponseEntity.ok(categoryData);
+ 	
     }
     
     // 사용자 Id, 이름 반환
