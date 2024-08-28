@@ -8,7 +8,7 @@ public interface ThemeService1 {
 	public Map<Long, Map<String, String>> findAllTheme();
 	
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
-	public Map<String ,?>  findThemeDetail(Long themeId);
+	public ThemeDetailResponseDTO findThemeDetail(Long themeId);
 	
 	// 나의 테마 조회 - 완료
 	public Map<Long, Map<String, String>> findMyTheme(String userId);

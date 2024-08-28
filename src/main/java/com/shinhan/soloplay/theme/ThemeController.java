@@ -43,7 +43,7 @@ public class ThemeController {
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
-			Map<String ,?>  findThemeDetail = themeService1.findThemeDetail(themeId);
+			ThemeDetailResponseDTO findThemeDetail = themeService1.findThemeDetail(themeId);
 			return ResponseEntity.ok(findThemeDetail);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 찾을 수 없습니다.");
