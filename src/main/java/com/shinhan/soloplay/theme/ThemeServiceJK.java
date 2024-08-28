@@ -10,7 +10,7 @@ public interface ThemeServiceJK {
 
     public int getIsSuccess(String userId);
     
-//    public Long getIsActivated(String userId);
+    public void getIsActivated(String userId);
     
     public Long getThemeCount(String userId);
 }

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ThemeServiceImpl1 implements ThemeService1 {
 	
 	private final ThemeRepository1 themeRepository1;
+	private final ThemeRepositoryJK themeRepositoryJK;
 	private final UserRepository userRepository;
 	final ThemeContentRepository themeContentRepository;
 	
@@ -113,15 +114,21 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
 	@Override
-	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1) {
+	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1, String userId) {
 		ThemeEntity themeEntity = themeRepository1.findById(themeId)
 												.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
+		
+		if(Boolean.TRUE.equals(themeRegisterDTO1.getThemeIsActivated())) {
+			themeRepositoryJK.findThemeIsActivated(userId);
+		}
 		
 		themeEntity.setThemeName(themeRegisterDTO1.getThemeName());
 		themeEntity.setThemeDescription(themeRegisterDTO1.getThemeDescription());
 		themeEntity.setThemeIsPublic(themeRegisterDTO1.getThemeIsPublic());
 		themeEntity.setThemeIsActivated(themeRegisterDTO1.getThemeIsActivated());
 		themeEntity.setThemeUpdateDate(LocalDateTime.now());
+		
+
 		
 		List<ThemeContentEntity> updateContents = themeEntity.getThemeContents();
 		List<SubCategoryEntity> updateCategories = themeRegisterDTO1.getSubCategory();

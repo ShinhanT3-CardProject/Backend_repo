@@ -32,11 +32,6 @@ public class ThemeControllerJK {
                 .collect(Collectors.toList());
     }
     
-//    @GetMapping("/isActivated")
-//    public Long getIsActivated(HttpSession httpSession) {
-//    	String userId = (String) httpSession.getAttribute("loginUser");
-//    	return themeServiceJK.getIsActivated(userId);
-//    }
     
     @GetMapping("/themeCount")
     public Long getTheme(HttpSession httpSession) {

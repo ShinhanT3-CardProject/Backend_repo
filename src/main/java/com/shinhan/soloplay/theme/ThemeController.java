@@ -70,9 +70,11 @@ public class ThemeController {
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	@PutMapping("/updateTheme/{themeId}")
 	public ResponseEntity<?> updateTheme(@PathVariable Long themeId,
-										@RequestBody ThemeRegisterDTO1 themeRegisterDTO1) {
+										@RequestBody ThemeRegisterDTO1 themeRegisterDTO1,
+										HttpSession httpSession) {
+		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			ThemeRegisterDTO1 updateTheme = themeService1.updateTheme(themeId, themeRegisterDTO1);
+			ThemeRegisterDTO1 updateTheme = themeService1.updateTheme(themeId, themeRegisterDTO1, userId);
 			return ResponseEntity.ok(updateTheme);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정 진행 중 오류가 발생했습니다.");
