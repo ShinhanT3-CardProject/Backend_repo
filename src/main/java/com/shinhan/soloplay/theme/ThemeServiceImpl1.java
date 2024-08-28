@@ -52,33 +52,41 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
-    public Map<String ,?> findThemeDetail(Long themeId) {
-    	Map<String, Object> result = new HashMap<>(); //맨 마지막에 리턴할 값을 담아주는 용도
-    	Map<Long, ThemeContentEntity> contents = new HashMap<>();
+    public ThemeDetailResponseDTO findThemeDetail(Long themeId) {
     	
     	ThemeEntity themeEntity = themeRepository1.findByThemeId(themeId);
-    	result.put("themeName", themeEntity.getThemeName());
-    	result.put("themeDescription", themeEntity.getThemeDescription());
     	
-    	themeEntity.getThemeContents().stream().forEach(content -> {
-    		contents.put(content.getThemeContentId(), content);
-    	});
+    	MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+			.get(0)
+			.getSubCategory()
+			.getMainCategory();
     	
-    	List<String> subCategories = new ArrayList<>();
-    	for(Long contentId:contents.keySet()) {
-    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
-    		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
-    		
-    		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
-    		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
-    		
-    		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
-    	}
-    	result.put("themeSubCategoryName", subCategories);
+    	String themeMainCategoryName = mainCategory.getThemeMainCategoryName();
     	
-    	return result;
+    	String themeBackground = mainCategory.getThemeBackground();
+    	
+    	List<ThemeContentsResponseDTO> contentsStore = themeEntity.getThemeContents()
+    		    .stream()
+    		    .map(contents -> ThemeContentsResponseDTO.builder()
+    		            .themeIsSuccess(contents.getThemeIsSuccess())
+    		            .themeSubCategoryName(contents.getSubCategory().getThemeSubCategoryName())
+    		            .build()
+    		    )
+    		    .collect(Collectors.toList());
+    	
+    	ThemeDetailResponseDTO themeInfo = ThemeDetailResponseDTO.builder()
+    			.themeName(themeEntity.getThemeName())
+    			.themeDescription(themeEntity.getThemeDescription())
+    			.themeMainCategoryName(themeMainCategoryName)
+    			.themeIsActivated(themeEntity.getThemeIsActivated())
+    			.themeIsPublic(themeEntity.getThemeIsPublic())
+    			.themeBackground(themeBackground)
+    			.themeContents(contentsStore)
+    			.build();
+    	
+    	
+    	return themeInfo;
     }
-
 	
     // 나의 테마 조회 - 완료
     @Override
