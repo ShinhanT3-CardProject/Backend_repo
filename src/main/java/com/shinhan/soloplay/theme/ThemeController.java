@@ -1,6 +1,6 @@
 package com.shinhan.soloplay.theme;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.shinhan.soloplay.point.PointService;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +33,7 @@ public class ThemeController {
 	@GetMapping("/findAllTheme")
 	public ResponseEntity<?> findAllTheme() {
 		try {
-			Map<Long, Map<String, String>> findAllTheme = themeService1.findAllTheme();
+			List<ThemeDetailResponseDTO> findAllTheme = themeService1.findAllTheme();
 			return ResponseEntity.ok(findAllTheme);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,7 +60,7 @@ public class ThemeController {
 	public ResponseEntity<?> findMyTheme(HttpSession httpSession) {
 		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			Map<Long, Map<String, String>> findMyTheme = themeService1.findMyTheme(userId);
+			List<ThemeDetailResponseDTO> findMyTheme = themeService1.findMyTheme(userId);
 			return ResponseEntity.ok(findMyTheme);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,17 +1,17 @@
 package com.shinhan.soloplay.theme;
 
-import java.util.Map;
+import java.util.List;
 
 public interface ThemeService1 {
 	
 	// 전체 테마 조회 (공개여부 참) - 완료
-	public Map<Long, Map<String, String>> findAllTheme();
+	public List<ThemeDetailResponseDTO> findAllTheme();
 	
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
 	public ThemeDetailResponseDTO findThemeDetail(Long themeId);
 	
 	// 나의 테마 조회 - 완료
-	public Map<Long, Map<String, String>> findMyTheme(String userId);
+	public List<ThemeDetailResponseDTO> findMyTheme(String userId);
 	
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1);

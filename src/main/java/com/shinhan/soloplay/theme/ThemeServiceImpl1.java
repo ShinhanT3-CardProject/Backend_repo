@@ -2,10 +2,7 @@ package com.shinhan.soloplay.theme;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -26,28 +23,24 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 	// 전체 테마 조회 (공개여부 참) - 완료
 	@Override
-	public Map<Long, Map<String, String>> findAllTheme() {
-		Map<Long, Map<String, String>> result = new HashMap<>();
-		
-		List<ThemeEntity> trueThemes = themeRepository1.findByThemeIsPublicTrue();
-		Map<Long, ThemeContentEntity> contents = new HashMap<>();
-		trueThemes.stream().forEach(theme->{
-			theme.getThemeContents().stream().forEach(content->{
-				contents.put(content.getThemeContentId(), content);
-			});
-			
-			contents.keySet().stream().forEach(contentId->{
-				Map<String, String> nameAndBack = new HashMap<>();
-				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
-				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
-				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
-		
-				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
-			});
-		});
-		
-		return result;
-  }
+	public List<ThemeDetailResponseDTO> findAllTheme() {
+	    List<ThemeEntity> trueThemes = themeRepository1.findByThemeIsPublicTrue();
+
+	    return trueThemes.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+
+	        return ThemeDetailResponseDTO.builder()
+	        		.themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
+	}
+	
     
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
@@ -74,6 +67,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     		    .collect(Collectors.toList());
     	
     	ThemeDetailResponseDTO themeInfo = ThemeDetailResponseDTO.builder()
+    			.themeId(themeEntity.getThemeId())
     			.themeName(themeEntity.getThemeName())
     			.themeDescription(themeEntity.getThemeDescription())
     			.themeMainCategoryName(themeMainCategoryName)
@@ -89,34 +83,22 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	
     // 나의 테마 조회 - 완료
     @Override
-	public Map<Long, Map<String, String>> findMyTheme(String userId) {
-		Map<Long, Map<String, String>> result = new HashMap<>();
-		
-		List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
-		System.out.println("myThemes : " + myThemes);
-		Map<Long, ThemeContentEntity> contents = new HashMap<>();
-		myThemes.stream().forEach(theme->{
-			
-			if (theme.getThemeContents().isEmpty()) {
-				System.out.println("themeContents가 비어있습니다.");
-			}
-			
-			theme.getThemeContents().stream().forEach(content -> {
-				contents.put(content.getThemeContentId(), content);
-			});
-			
-			contents.keySet().stream().forEach(contentId -> {
-				Map<String, String> nameAndBack = new HashMap<>();
-				nameAndBack.put("themeName", contents.get(contentId).getTheme().getThemeName());
-				nameAndBack.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
-				nameAndBack.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
-				
-				result.put(contents.get(contentId).getTheme().getThemeId(), nameAndBack);
-			});
-		});
-		System.out.println("result : " + result);
-		
-		return result;
+	public List<ThemeDetailResponseDTO>findMyTheme(String userId) {
+	    List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
+
+	    return myThemes.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+
+	        return ThemeDetailResponseDTO.builder()
+	        		.themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
 	}
     
 	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
