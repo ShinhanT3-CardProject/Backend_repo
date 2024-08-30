@@ -70,6 +70,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     		    .map(contents -> ThemeContentsResponseDTO.builder()
     		            .themeIsSuccess(contents.getThemeIsSuccess())
     		            .themeSubCategoryName(contents.getSubCategory().getThemeSubCategoryName())
+    		            .themeSubCategoryId(contents.getSubCategory().getThemeSubCategoryId())
     		            .build()
     		    )
     		    .collect(Collectors.toList());

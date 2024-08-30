@@ -14,4 +14,6 @@ public class ThemeContentsResponseDTO {
 	Boolean themeIsSuccess;
 	
 	String themeSubCategoryName;
+	
+	Long themeSubCategoryId;
 }
