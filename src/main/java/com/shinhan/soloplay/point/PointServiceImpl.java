@@ -1,6 +1,8 @@
 package com.shinhan.soloplay.point;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -26,9 +28,56 @@ public class PointServiceImpl implements PointService {
     	UserEntity userEntity = UserEntity.builder().userId(userId).build();
         List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
         int totalPoints = pointEntities.stream()
-                .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) // Adjust total by isAdd value
+                .mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) 
                 .sum();                                                                                                                                                                                                                    
         return Math.max(totalPoints, 0);
+    }
+    
+    // 사용자 ID에 해당하는 카테고리별 포인트 비율을 반환하는 메서드
+    @Override
+    public Map<String,Object> getCategoryData(String userId){
+    	UserEntity userEntity = UserEntity.builder().userId(userId).build();
+    	List<PointEntity> pointEntities = pointRepository.findByUser(userEntity);
+    	
+    	// 차감값은 제외하여 계산
+    	int totalPoints = pointEntities.stream()
+    			.filter(PointEntity->PointEntity.getIsAdd()>=0)
+    			.mapToInt(pointEntity -> pointEntity.getIsAdd() * pointEntity.getAmount()) 
+                .sum();
+    	
+    	// 카테고리별 총 누적 포인트의 비율 계산
+    	Map<String, Integer> categoryPoints = pointEntities.stream()
+    			.filter(PointEntity->PointEntity.getCategory()>=0)
+    			.collect(Collectors.groupingBy(
+    					pointEntity -> {
+                            // 카테고리 값을 문자열로 변환
+                            switch (pointEntity.getCategory()) {
+                                case 1: return "테마";
+                                case 2: return "레이드";
+                                case 0: return "기타";
+                                default: return "기타"; 
+                            }
+                        },
+    						Collectors.summingInt(PointEntity-> PointEntity.getIsAdd()* PointEntity.getAmount())
+    					));
+    	
+    	Map<String, Double> categoryRatios = new HashMap<>();
+    	
+    	if(totalPoints>0) {
+    		categoryRatios.put("테마", categoryPoints.getOrDefault("테마", 0)/(double)totalPoints *100);
+    		categoryRatios.put("레이드", categoryPoints.getOrDefault("레이드", 0)/(double)totalPoints *100);
+    		categoryRatios.put("기타", categoryPoints.getOrDefault("기타", 0)/(double)totalPoints *100);
+    	}else {
+    		categoryRatios.put("테마", 0.0);
+            categoryRatios.put("레이드", 0.0);
+            categoryRatios.put("기타", 0.0);
+    	}
+    	
+    	Map<String,Object> result = new HashMap<>();
+    	result.put("categoryTotals", categoryPoints);
+    	result.put("categoryRatios", categoryRatios);    	
+    	
+    	return result;
     }
     
     // 사용자 ID에 해당하는 모든 포인트 내역을 반환하는 메서드
@@ -64,9 +113,15 @@ public class PointServiceImpl implements PointService {
     // 사용자 ID와 함께 새로운 포인트를 생성하고 반환하는 메서드
     @Override
     public int createPoint(String userId, PointDTO pointDTO) {
+    	// 포인트 차감시 카테고리 -1
+    	if (pointDTO.getIsAdd() == -1) {
+            pointDTO.setCategory(-1); 
+        }
+    	
     	int maxPoint = getTotalPointsByUserId(userId);
     	
-    	if (pointDTO.getIsAdd() == -1 && pointDTO.getAmount() > maxPoint) return 0; // 실패
+    	if (pointDTO.getIsAdd() == -1 && pointDTO.getAmount() > maxPoint) return 0; // 실패    	
+    	
     	
         PointEntity pointEntity = PointEntity.builder()
                 .pointId(pointDTO.getPointId())
