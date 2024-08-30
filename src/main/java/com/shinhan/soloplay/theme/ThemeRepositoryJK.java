@@ -1,8 +1,10 @@
 package com.shinhan.soloplay.theme;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ThemeRepositoryJK extends JpaRepository<ThemeEntity, Long> {
 	
@@ -11,8 +13,10 @@ public interface ThemeRepositoryJK extends JpaRepository<ThemeEntity, Long> {
     Long findActivatedThemeIdsByUserId(@Param("userId") String userId);
     
     //유저 ID에 대한 테마 전부 0으로 두기
-//    @Query("UPDATE ThemeEntity t set t.theme_is_activated = 0 where t.user.user_id = :userId")
-//    Long findThemeIsActivated(@Param("userId") String userId);
+    @Modifying
+    @Transactional
+    @Query("UPDATE ThemeEntity t set t.themeIsActivated = false where t.user.userId = :userId")
+    void findThemeIsActivated(@Param("userId") String userId);
     
     //유저 ID에 대한 등록된 테마 갯수 확인
     @Query("SELECT count(t.user.userId) from ThemeEntity t where t.user.userId= :userId")

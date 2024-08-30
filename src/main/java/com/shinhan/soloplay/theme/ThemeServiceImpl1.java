@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ThemeServiceImpl1 implements ThemeService1 {
 	
 	private final ThemeRepository1 themeRepository1;
+	private final ThemeRepositoryJK themeRepositoryJK;
 	private final UserRepository userRepository;
 	final ThemeContentRepository themeContentRepository;
 	
@@ -51,33 +52,42 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
-    public Map<String ,?> findThemeDetail(Long themeId) {
-    	Map<String, Object> result = new HashMap<>(); //맨 마지막에 리턴할 값을 담아주는 용도
-    	Map<Long, ThemeContentEntity> contents = new HashMap<>();
+    public ThemeDetailResponseDTO findThemeDetail(Long themeId) {
     	
     	ThemeEntity themeEntity = themeRepository1.findByThemeId(themeId);
-    	result.put("themeName", themeEntity.getThemeName());
-    	result.put("themeDescription", themeEntity.getThemeDescription());
     	
-    	themeEntity.getThemeContents().stream().forEach(content -> {
-    		contents.put(content.getThemeContentId(), content);
-    	});
+    	MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+			.get(0)
+			.getSubCategory()
+			.getMainCategory();
     	
-    	List<String> subCategories = new ArrayList<>();
-    	for(Long contentId:contents.keySet()) {
-    		result.put("themeMainCategoryName", contents.get(contentId).getSubCategory().getMainCategory().getThemeMainCategoryName());
-    		result.put("themeBackground", contents.get(contentId).getSubCategory().getMainCategory().getThemeBackground());
-    		
-    		result.put("themeIsActivated", contents.get(contentId).getTheme().getThemeIsActivated());
-    		result.put("themeIsPublic", contents.get(contentId).getTheme().getThemeIsPublic());
-    		
-    		subCategories.add(contents.get(contentId).getSubCategory().getThemeSubCategoryName());
-    	}
-    	result.put("themeSubCategoryName", subCategories);
+    	String themeMainCategoryName = mainCategory.getThemeMainCategoryName();
     	
-    	return result;
+    	String themeBackground = mainCategory.getThemeBackground();
+    	
+    	List<ThemeContentsResponseDTO> contentsStore = themeEntity.getThemeContents()
+    		    .stream()
+    		    .map(contents -> ThemeContentsResponseDTO.builder()
+    		            .themeIsSuccess(contents.getThemeIsSuccess())
+    		            .themeSubCategoryName(contents.getSubCategory().getThemeSubCategoryName())
+    		            .themeSubCategoryId(contents.getSubCategory().getThemeSubCategoryId())
+    		            .build()
+    		    )
+    		    .collect(Collectors.toList());
+    	
+    	ThemeDetailResponseDTO themeInfo = ThemeDetailResponseDTO.builder()
+    			.themeName(themeEntity.getThemeName())
+    			.themeDescription(themeEntity.getThemeDescription())
+    			.themeMainCategoryName(themeMainCategoryName)
+    			.themeIsActivated(themeEntity.getThemeIsActivated())
+    			.themeIsPublic(themeEntity.getThemeIsPublic())
+    			.themeBackground(themeBackground)
+    			.themeContents(contentsStore)
+    			.build();
+    	
+    	
+    	return themeInfo;
     }
-
 	
     // 나의 테마 조회 - 완료
     @Override
@@ -113,15 +123,21 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
 	@Override
-	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1) {
+	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1, String userId) {
 		ThemeEntity themeEntity = themeRepository1.findById(themeId)
 												.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
+		
+		if(Boolean.TRUE.equals(themeRegisterDTO1.getThemeIsActivated())) {
+			themeRepositoryJK.findThemeIsActivated(userId);
+		}
 		
 		themeEntity.setThemeName(themeRegisterDTO1.getThemeName());
 		themeEntity.setThemeDescription(themeRegisterDTO1.getThemeDescription());
 		themeEntity.setThemeIsPublic(themeRegisterDTO1.getThemeIsPublic());
 		themeEntity.setThemeIsActivated(themeRegisterDTO1.getThemeIsActivated());
 		themeEntity.setThemeUpdateDate(LocalDateTime.now());
+		
+
 		
 		List<ThemeContentEntity> updateContents = themeEntity.getThemeContents();
 		List<SubCategoryEntity> updateCategories = themeRegisterDTO1.getSubCategory();
