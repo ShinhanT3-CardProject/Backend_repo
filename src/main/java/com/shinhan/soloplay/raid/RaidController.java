@@ -54,14 +54,9 @@ public class RaidController {
 	public BattleResponseDTO addtionalParticipant(@PathVariable Long raidId, @PathVariable Long participantId, HttpSession httpSession) {
 		String userId = (String)httpSession.getAttribute("loginUser");
 		RaidDTO raid = raidService.findByRaidId(raidId);
-		int contribution = 0;
+		int contribution = participantService.userContribution(raidId, userId);
 		
 		List<ParticipantDTO> additionalParticipants = participantService.findAdditionalParticipant(raidId, participantId);
-		for (ParticipantDTO participants : additionalParticipants) {
-			if (participants.getUserId().equals(userId)) {
-				contribution += participants.getContribution();
-			}
-		}
 		
 		BattleResponseDTO response = BattleResponseDTO.builder()
 				.raid(raid)
