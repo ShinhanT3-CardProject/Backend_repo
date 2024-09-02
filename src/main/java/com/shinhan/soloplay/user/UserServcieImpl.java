@@ -1,5 +1,14 @@
 package com.shinhan.soloplay.user;
 
-public class UserServcieImpl implements UserService{
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.shinhan.soloplay.card.CardRepository;
+
+public class UserServcieImpl implements UserService{
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	CardRepository cardRepository;
 }

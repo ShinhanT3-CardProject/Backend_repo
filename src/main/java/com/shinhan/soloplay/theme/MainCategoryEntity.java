@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "MAIN_CATEGORY")
+@ToString(exclude = "subCategories")
 public class MainCategoryEntity {
     
     @Id
@@ -33,8 +36,7 @@ public class MainCategoryEntity {
     @Column(name = "THEME_BACKGROUND")
     private String themeBackground;
 
-    @OneToMany(mappedBy = "mainCategory")
+    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY)
     private List<SubCategoryEntity> subCategories;
 
-    // Getters and Setters
 }

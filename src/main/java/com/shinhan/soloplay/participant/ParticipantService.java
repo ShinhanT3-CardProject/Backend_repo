@@ -2,38 +2,45 @@ package com.shinhan.soloplay.participant;
 
 import java.util.List;
 
-public interface ParticipantService {
+import com.shinhan.soloplay.raid.RaidEntity;
+import com.shinhan.soloplay.user.UserEntity;
 
-	//CRUD
-	//1.Create
-	void create(ParticipantDTO dto);
+
+public interface ParticipantService {
 	
-	//2.Read
-	List<ParticipantDTO> readAll();
-	ParticipantDTO readById(Long raidId, String userId);
-	
-	//3.Update
-	void update(ParticipantDTO dto);
+	List<ParticipantDTO> findByUserId(String userId);
+	List<ParticipantDTO> findByRaid(Long raidId);
+	List<ParticipantDTO> findAdditionalParticipant(Long raidId, Long participantId);
+	int userContribution(Long raidId, String userId);
+	int userReward(Long raidId, String userId);
 	
 	//Entity -> DTO
-	default ParticipantDTO entityToDTO(ParticipantEntity entity) {
-		ParticipantDTO dto = ParticipantDTO.builder()
-				.raidId(entity.getParticipantId().getRaidEntity().getRaidId())
-				.userId(entity.getParticipantId().getUserEntity().getUserId())
-				.contribution(entity.getContribution())
-				.attack(entity.getAttack())
-				.createTime(entity.getCreateTime())
+	default ParticipantDTO entityToDTO(ParticipantEntity participantEntity) {
+		ParticipantDTO participantDTO = ParticipantDTO.builder()
+				.participantId(participantEntity.getParticipantId())
+				.contribution(participantEntity.getContribution())
+				.isRewarded(participantEntity.getIsRewarded())
+				.raidId(participantEntity.getRaidEntity().getRaidId())
+				.userId(participantEntity.getUserEntity().getUserId())
 				.build();
-		return dto;
+		return participantDTO;
 	}
 	
 	//DTO -> Entity
-	// raidEntity와 userEntity 만든 후 만들 수 있음
-//	default ParticipantEntity dtoToEntity(ParticipantDTO dto) {
-//		ParticipantId participantId;
-//		ParticipantEntity entity = ParticipantEntity.builder()
-//				.participantId(participantId)
-//				.build();
-//		return entity;
-//	}
+	default ParticipantEntity dtoToEntity(ParticipantDTO participantDTO) {
+		UserEntity userEntity = UserEntity.builder()
+				.userId(participantDTO.getUserId())
+				.build();
+		RaidEntity raidEntity = RaidEntity.builder()
+				.raidId(participantDTO.getRaidId())
+				.build();
+		ParticipantEntity participantEntity = ParticipantEntity.builder()
+				.participantId(participantDTO.getParticipantId())
+				.contribution(participantDTO.getContribution())
+				.isRewarded(participantDTO.getIsRewarded())
+				.userEntity(userEntity)
+				.raidEntity(raidEntity)
+				.build();
+		return participantEntity;
+	}
 }

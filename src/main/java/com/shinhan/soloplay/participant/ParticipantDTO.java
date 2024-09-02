@@ -1,7 +1,5 @@
 package com.shinhan.soloplay.participant;
 
-import java.sql.Timestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ParticipantDTO {
 	
+	Long participantId;	
+	int contribution;
+	int isRewarded;
 	Long raidId;
 	String userId;
-	int contribution;
-	int attack;
-	Timestamp createTime;
+
+
 }

@@ -1,8 +1,6 @@
 package com.shinhan.soloplay.coupon;
 
-import lombok.Data;
-
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -29,15 +27,15 @@ public class CouponHistoryEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer couponHistoryId;
+	private Long couponHistoryId;
 	private int isUsed;
-	private LocalDateTime expirationDate;
+	private Timestamp expirationDate;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id",nullable = false)
     private CouponEntity coupon;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",nullable = false)
 	private UserEntity user;
 }

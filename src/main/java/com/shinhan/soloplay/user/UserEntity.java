@@ -1,5 +1,7 @@
 package com.shinhan.soloplay.user;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "USER")
-public class UserEntity {
+public class UserEntity implements Serializable {
 
     @Id
     @Column(name = "USER_ID", nullable = false)
@@ -45,6 +47,29 @@ public class UserEntity {
             this.isActive = true;
         }
         
+    }
+    
+    
+    public static UserEntity fromDTO(UserDTO userDTO) {
+        return UserEntity.builder()
+                .userId(userDTO.getUserId())
+                .userName(userDTO.getUserName())
+                .userPassword(userDTO.getUserPassword())
+                .createDate(userDTO.getCreateDate() != null 
+                            ? userDTO.getCreateDate().toLocalDateTime() 
+                            : LocalDateTime.now())  // createDate가 null이면 현재 시각을 사용
+                .isActive(userDTO.isActive())
+                .build();
+    }
+    
+    public static UserDTO toDTO(UserEntity userEntity) {
+        return UserDTO.builder()
+                .userId(userEntity.getUserId())
+                .userName(userEntity.getUserName())
+                .userPassword(userEntity.getUserPassword())
+                .createDate(Timestamp.valueOf(userEntity.getCreateDate()))
+                .isActive(userEntity.getIsActive())
+                .build();
     }
     
     

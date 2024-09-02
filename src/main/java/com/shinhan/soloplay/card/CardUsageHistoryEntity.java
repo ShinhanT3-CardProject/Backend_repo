@@ -1,6 +1,6 @@
 package com.shinhan.soloplay.card;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import java.sql.Timestamp;
 
 import com.shinhan.soloplay.merchant.MerchantEntity;
 
@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,11 +28,14 @@ public class CardUsageHistoryEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long usageId;
 	
-	private LocalDateTime transaction_date;
-	private BigDecimal cardType;
+	private Timestamp transactionDate;
+	private int amount;
 	
 	@ManyToOne
     @JoinColumn(name = "merchant_id")
     private MerchantEntity merchant;
 	
+	@ManyToOne
+	@JoinColumn(name = "card_num")
+	private UserCardEntity userCard;
 }
