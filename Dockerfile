@@ -1,3 +1,3 @@
 FROM openjdk:17
-COPY ${JAR_FILE} app.jar
+COPY *-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
