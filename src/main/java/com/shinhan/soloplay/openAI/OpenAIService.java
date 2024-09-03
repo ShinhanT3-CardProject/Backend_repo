@@ -102,7 +102,7 @@ public class OpenAIService {
             
             // 각 소분류 항목에서 숫자와 마침표를 제거하고, 순수한 소분류 이름만 추출
             List<String> subcategories = List.of(content.split("\n")).stream()
-                .map(subcategory -> subcategory.replaceAll("^\\d+\\.\\s*", "").trim())
+                .map(subcategory -> subcategory.replaceAll("^\\d+\\.\\s*", "").replace("- ", "").trim())
                 .collect(Collectors.toList());
             
             System.out.println(subcategories);
