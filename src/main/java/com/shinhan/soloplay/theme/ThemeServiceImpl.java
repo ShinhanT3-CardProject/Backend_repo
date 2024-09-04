@@ -5,6 +5,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.maincategory.MainCategoryEntity;
@@ -22,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ThemeServiceImpl implements ThemeService {
 	
-	private final ThemeRepository themeRepository1;
 	private final UserRepository userRepository;
 	final MainCategoryRepository mainCategoryRepo;
     final ThemeRepository themeRepository;
@@ -30,31 +33,103 @@ public class ThemeServiceImpl implements ThemeService {
 	
 
 	// 전체 테마 조회 (공개여부 참) - 완료
+//	@Override
+//	public List<ThemeDetailResponseDTO> findAllTheme() {
+//	    List<ThemeEntity> trueThemes = themeRepository.findByThemeIsPublicTrue();
+//
+//	    return trueThemes.stream().map(themeEntity -> {
+//	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+//	                .get(0)
+//	                .getSubCategory()
+//	                .getMainCategory();
+//
+//	        return ThemeDetailResponseDTO.builder()
+//	        		.themeId(themeEntity.getThemeId())
+//	                .themeName(themeEntity.getThemeName())
+//	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+//	                .themeBackground(mainCategory.getThemeBackground())
+//	                .build();
+//	    }).collect(Collectors.toList());
+//	}
+	
+	// 전체 테마 조회 (공개여부 참) - 완료
 	@Override
-	public List<ThemeDetailResponseDTO> findAllTheme() {
-	    List<ThemeEntity> trueThemes = themeRepository1.findByThemeIsPublicTrue();
-
-	    return trueThemes.stream().map(themeEntity -> {
+	public Page<ThemeDetailResponseDTO> findAllTheme(int page) {
+	    Pageable pageable = PageRequest.of(page, 5);
+	    
+	    Page<ThemeEntity> themeEntities = themeRepository.findAllTheme(pageable);
+	    
+	    List<ThemeDetailResponseDTO> dtoList = themeEntities.stream().map(themeEntity -> {
 	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
 	                .get(0)
 	                .getSubCategory()
 	                .getMainCategory();
-
+	        
 	        return ThemeDetailResponseDTO.builder()
-	        		.themeId(themeEntity.getThemeId())
+	                .themeId(themeEntity.getThemeId())
 	                .themeName(themeEntity.getThemeName())
 	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
 	                .themeBackground(mainCategory.getThemeBackground())
 	                .build();
 	    }).collect(Collectors.toList());
+
+	    // Page<ThemeDetailResponseDTO> 객체를 생성하여 반환
+	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
 	}
 	
+	// 카테고리별 테마 조회 - 페이징
+	public Page<ThemeDetailResponseDTO> findByCategory(int page, Long themeMainCategoryId) {
+		Pageable pageable = PageRequest.of(page, 5);
+		Page<ThemeEntity> themeEntities = themeRepository.findByCategory(pageable, themeMainCategoryId);
+		
+		List<ThemeDetailResponseDTO> dtoList = themeEntities.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+	        
+	        return ThemeDetailResponseDTO.builder()
+	                .themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
+
+	    // Page<ThemeDetailResponseDTO> 객체를 생성하여 반환
+	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
+	}
+			
+	// 테마 검색 - 페이징
+	public Page<ThemeDetailResponseDTO> searchByName(int page, String search){ 
+		search = "%" + search.toLowerCase() + "%";
+		Pageable pageable = PageRequest.of(page, 5);
+		Page<ThemeEntity> themeEntities = themeRepository.searchByName(pageable, search);
+		
+		List<ThemeDetailResponseDTO> dtoList = themeEntities.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+	        
+	        return ThemeDetailResponseDTO.builder()
+	                .themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
+
+	    // Page<ThemeDetailResponseDTO> 객체를 생성하여 반환
+	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
+	}
+
     
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
     public ThemeDetailResponseDTO findThemeDetail(Long themeId) {
     	
-    	ThemeEntity themeEntity = themeRepository1.findByThemeId(themeId);
+    	ThemeEntity themeEntity = themeRepository.findByThemeId(themeId);
     	
     	MainCategoryEntity mainCategory = themeEntity.getThemeContents()
 			.get(0)
@@ -93,7 +168,7 @@ public class ThemeServiceImpl implements ThemeService {
     // 나의 테마 조회 - 완료
     @Override
 	public List<ThemeDetailResponseDTO>findMyTheme(String userId) {
-	    List<ThemeEntity> myThemes = themeRepository1.findByUser_UserId(userId);
+	    List<ThemeEntity> myThemes = themeRepository.findByUser_UserId(userId);
 
 	    return myThemes.stream().map(themeEntity -> {
 	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
@@ -113,7 +188,7 @@ public class ThemeServiceImpl implements ThemeService {
 	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
 	@Override
 	public ThemeRegisterDTO updateTheme(Long themeId, ThemeRegisterDTO themeRegisterDTO1, String userId) {
-		ThemeEntity themeEntity = themeRepository1.findById(themeId)
+		ThemeEntity themeEntity = themeRepository.findById(themeId)
 												.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
 		
 		if(Boolean.TRUE.equals(themeRegisterDTO1.getThemeIsActivated())) {
@@ -151,14 +226,14 @@ public class ThemeServiceImpl implements ThemeService {
 		}
 		
 		// 설정된 Entity 저장
-		ThemeEntity updateTheme = themeRepository1.save(themeEntity);
+		ThemeEntity updateTheme = themeRepository.save(themeEntity);
 		return convertToRegisterDTO(updateTheme);
 	}
 	
 	// 테마 삭제 (나의 테마 상세조회에서 가능) - 완료
 	@Override
 	public void deleteTheme(Long themeId) {
-		themeRepository1.deleteById(themeId);
+		themeRepository.deleteById(themeId);
 	}
     
 	// 테마 등록
@@ -192,7 +267,7 @@ public class ThemeServiceImpl implements ThemeService {
 	    themeEntity.setThemeContents(themeContents);
 
 	    // ThemeEntity 저장
-	    ThemeEntity savedTheme = themeRepository1.save(themeEntity);
+	    ThemeEntity savedTheme = themeRepository.save(themeEntity);
 
 	    // 저장된 ThemeEntity를 DTO로 변환
 	    return convertToRegisterDTO(savedTheme);
@@ -201,14 +276,14 @@ public class ThemeServiceImpl implements ThemeService {
 	// 테마 보상 대상 여부 확인
 	@Override
 	public boolean checkThemeSuccess(Long themeId) {
-		return !themeRepository1.findById(themeId).get().getThemeIsRewarded()
+		return !themeRepository.findById(themeId).get().getThemeIsRewarded()
 					&& themeContentRepository.countAllByThemeIsSuccessTrue(themeId) == 5;
 	}
 	
 	// 테마 성공 보상 수여
 	@Override
 	public int updateThemeIsRewarded(Long themeId) {
-		return themeRepository1.updateThemeIsRewarded(themeId);
+		return themeRepository.updateThemeIsRewarded(themeId);
 	}
 	
 	public List<MainCategoryEntity> getAllMainCategories() {
