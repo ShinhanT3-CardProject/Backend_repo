@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.maincategory;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MainCategoryServiceImplYJ implements MainCategoryService3 {
+public class MainCategoryServiceImpl implements MainCategoryService {
 
     @Autowired
-    private MainCategoryRepositoryYJ mainCategoryRepository;
+    private MainCategoryRepository mainCategoryRepository;
 
     @Override
     public List<String> getMainCategoryNameByUserId(String userId) { 

@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.themecontent;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

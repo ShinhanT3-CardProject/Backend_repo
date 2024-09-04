@@ -7,6 +7,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.shinhan.soloplay.maincategory.MainCategoryEntity;
+import com.shinhan.soloplay.maincategory.MainCategoryRepository;
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
+import com.shinhan.soloplay.themecontent.ThemeContentEntity;
+import com.shinhan.soloplay.themecontent.ThemeContentRepository;
+import com.shinhan.soloplay.themecontent.ThemeContentsResponseDTO;
 import com.shinhan.soloplay.user.UserEntity;
 import com.shinhan.soloplay.user.UserRepository;
 
@@ -14,11 +20,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ThemeServiceImpl1 implements ThemeService1 {
+public class ThemeServiceImpl implements ThemeService {
 	
-	private final ThemeRepository1 themeRepository1;
-	private final ThemeRepositoryJK themeRepositoryJK;
+	private final ThemeRepository themeRepository1;
 	private final UserRepository userRepository;
+	final MainCategoryRepository mainCategoryRepo;
+    final ThemeRepository themeRepository;
 	final ThemeContentRepository themeContentRepository;
 	
 
@@ -105,12 +112,12 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 수정 (나의 테마 상세조회에서 가능) - Postman까지 테스트 완료, Front 연결 중
 	@Override
-	public ThemeRegisterDTO1 updateTheme(Long themeId, ThemeRegisterDTO1 themeRegisterDTO1, String userId) {
+	public ThemeRegisterDTO updateTheme(Long themeId, ThemeRegisterDTO themeRegisterDTO1, String userId) {
 		ThemeEntity themeEntity = themeRepository1.findById(themeId)
 												.orElseThrow(() -> new IllegalArgumentException("유효하지 않은 theme ID"));
 		
 		if(Boolean.TRUE.equals(themeRegisterDTO1.getThemeIsActivated())) {
-			themeRepositoryJK.findThemeIsActivated(userId);
+			themeRepository.findThemeIsActivated(userId);
 		}
 		
 		themeEntity.setThemeName(themeRegisterDTO1.getThemeName());
@@ -156,7 +163,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
     
 	// 테마 등록
 	@Override
-	public ThemeRegisterDTO1 insertTheme(ThemeRegisterDTO1 themeRegisterDTO1) {
+	public ThemeRegisterDTO insertTheme(ThemeRegisterDTO themeRegisterDTO1) {
 		 // UserEntity 조회
 	    UserEntity userEntity = userRepository.findById(themeRegisterDTO1.getUserId())
 	                                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID"));
@@ -204,34 +211,59 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 		return themeRepository1.updateThemeIsRewarded(themeId);
 	}
 	
+	public List<MainCategoryEntity> getAllMainCategories() {
+        return mainCategoryRepo.findAll();
+    }
+
+    public List<SubCategoryEntity> getSubCategoriesByMainCategory(Long mainCategoryId) {
+        return mainCategoryRepo.findById(mainCategoryId)
+            .map(MainCategoryEntity::getSubCategories)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Main Category ID: " + mainCategoryId));
+    }
+
+	public int getIsSuccess(String userId) {
+		Long themeId = themeRepository.findActivatedThemeIdsByUserId(userId);
+		return themeContentRepository.countAllByThemeIsSuccessTrue(themeId);
+	}
+
+	
+	public void getIsActivated(String userId) {
+		themeRepository.findThemeIsActivated(userId);
+	}
+
+	public Long getThemeCount(String userId) {
+		return themeRepository.findThemeCount(userId);
+	}
+
+	
 	
 	//없어도 되는지 실험
 	
-	private ThemeSearchDTO1 convertToSearchDTO(ThemeEntity themeEntity) {
-		// 첫 번째 ThemeContentEntity를 가져와서 사용
-		ThemeContentEntity themeContentEntity = themeEntity.getThemeContents().stream().findFirst()
-															.orElseThrow(() -> new IllegalStateException("ThemeContentEntity가 없습니다."));
-		
-		SubCategoryEntity subCategoryEntity = themeContentEntity.getSubCategory();
-		MainCategoryEntity mainCategoryEntity = subCategoryEntity.getMainCategory();
-		
-		return ThemeSearchDTO1.builder()
-								.themeId(themeEntity.getThemeId())
-								.user(themeEntity.getUser())
-								.themeName(themeEntity.getThemeName())
-								.themeDescription(themeEntity.getThemeDescription())
-								.themeIsActivated(themeEntity.getThemeIsActivated())
-								.themeIsPublic(themeEntity.getThemeIsPublic())
-								.themeCreateDate(themeEntity.getThemeCreateDate())
-								.themeUpdateDate(themeEntity.getThemeUpdateDate())
-								.themeMainCategoryId(mainCategoryEntity.getThemeMainCategoryId())
-								.themeMainCategoryName(mainCategoryEntity.getThemeMainCategoryName())
-								.themeBackground(mainCategoryEntity.getThemeBackground())
-								.themeSubCategoryName(subCategoryEntity.getThemeSubCategoryName())
-								.build();
-	}
+//	private ThemeSearchDTO convertToSearchDTO(ThemeEntity themeEntity) {
+//		// 첫 번째 ThemeContentEntity를 가져와서 사용
+//		ThemeContentEntity themeContentEntity = themeEntity.getThemeContents().stream().findFirst()
+//															.orElseThrow(() -> new IllegalStateException("ThemeContentEntity가 없습니다."));
+//		
+//		SubCategoryEntity subCategoryEntity = themeContentEntity.getSubCategory();
+//		MainCategoryEntity mainCategoryEntity = subCategoryEntity.getMainCategory();
+//		
+//		return ThemeSearchDTO.builder()
+//								.themeId(themeEntity.getThemeId())
+//								.user(themeEntity.getUser())
+//								.themeName(themeEntity.getThemeName())
+//								.themeDescription(themeEntity.getThemeDescription())
+//								.themeIsActivated(themeEntity.getThemeIsActivated())
+//								.themeIsPublic(themeEntity.getThemeIsPublic())
+//								.themeCreateDate(themeEntity.getThemeCreateDate())
+//								.themeUpdateDate(themeEntity.getThemeUpdateDate())
+//								.themeMainCategoryId(mainCategoryEntity.getThemeMainCategoryId())
+//								.themeMainCategoryName(mainCategoryEntity.getThemeMainCategoryName())
+//								.themeBackground(mainCategoryEntity.getThemeBackground())
+//								.themeSubCategoryName(subCategoryEntity.getThemeSubCategoryName())
+//								.build();
+//	}
 	
-	private ThemeRegisterDTO1 convertToRegisterDTO(ThemeEntity themeEntity) {
+	private ThemeRegisterDTO convertToRegisterDTO(ThemeEntity themeEntity) {
 	    List<ThemeContentEntity> themeContents = themeEntity.getThemeContents();
 
 	    if (themeContents.isEmpty()) {
@@ -249,7 +281,7 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 	    // UserEntity에서 필요한 정보만 추출 (또는 UserDTO로 변환)
 	    String userId = themeEntity.getUser().getUserId();
 
-	    return ThemeRegisterDTO1.builder()
+	    return ThemeRegisterDTO.builder()
 	            .themeId(themeEntity.getThemeId())
 	            .userId(userId)  // UserEntity 대신 userId를 사용하거나 UserDTO로 변환할 수 있습니다.
 	            .themeName(themeEntity.getThemeName())
@@ -267,37 +299,37 @@ public class ThemeServiceImpl1 implements ThemeService1 {
 
 	
 	//Entity 변환 메서드 ThemeRegisterDTO1 -> ThemeEntity
-	private ThemeEntity convertToEntity(ThemeRegisterDTO1 themeRegisterDTO1) {
-		
-	    // UserEntity 조회
-	    UserEntity userEntity = userRepository.findById(themeRegisterDTO1.getUserId())
-	                                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID"));
-
-	    // ThemeEntity 생성
-	    ThemeEntity themeEntity = ThemeEntity.builder()
-	            .themeName(themeRegisterDTO1.getThemeName())
-	            .themeDescription(themeRegisterDTO1.getThemeDescription())
-	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
-	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
-	            .user(userEntity)
-	            .themeCreateDate(LocalDateTime.now())
-	            .themeUpdateDate(LocalDateTime.now())
-	            .build();
-
-	    // SubCategoryEntity 리스트를 ThemeContentEntity로 변환하여 ThemeEntity에 연결
-	    List<ThemeContentEntity> themeContents = themeRegisterDTO1.getSubCategory().stream()
-	            .map(subCategory -> ThemeContentEntity.builder()
-	                    .theme(themeEntity)  // ThemeEntity와 연결
-	                    .subCategory(subCategory)  // SubCategoryEntity와 연결
-	                    .themeIsSuccess(false)  // 초기 상태를 설정
-	                    .build())
-	            .collect(Collectors.toList());
-
-	    // ThemeEntity에 ThemeContentEntity 리스트를 설정
-	    themeEntity.setThemeContents(themeContents);
-
-	    return themeEntity;
-	}
+//	private ThemeEntity convertToEntity(ThemeRegisterDTO themeRegisterDTO1) {
+//		
+//	    // UserEntity 조회
+//	    UserEntity userEntity = userRepository.findById(themeRegisterDTO1.getUserId())
+//	                                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자 ID"));
+//
+//	    // ThemeEntity 생성
+//	    ThemeEntity themeEntity = ThemeEntity.builder()
+//	            .themeName(themeRegisterDTO1.getThemeName())
+//	            .themeDescription(themeRegisterDTO1.getThemeDescription())
+//	            .themeIsActivated(themeRegisterDTO1.getThemeIsActivated())
+//	            .themeIsPublic(themeRegisterDTO1.getThemeIsPublic())
+//	            .user(userEntity)
+//	            .themeCreateDate(LocalDateTime.now())
+//	            .themeUpdateDate(LocalDateTime.now())
+//	            .build();
+//
+//	    // SubCategoryEntity 리스트를 ThemeContentEntity로 변환하여 ThemeEntity에 연결
+//	    List<ThemeContentEntity> themeContents = themeRegisterDTO1.getSubCategory().stream()
+//	            .map(subCategory -> ThemeContentEntity.builder()
+//	                    .theme(themeEntity)  // ThemeEntity와 연결
+//	                    .subCategory(subCategory)  // SubCategoryEntity와 연결
+//	                    .themeIsSuccess(false)  // 초기 상태를 설정
+//	                    .build())
+//	            .collect(Collectors.toList());
+//
+//	    // ThemeEntity에 ThemeContentEntity 리스트를 설정
+//	    themeEntity.setThemeContents(themeContents);
+//
+//	    return themeEntity;
+//	}
 
 
 }

@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.shinhan.soloplay.theme.ThemeContentRepository;
-import com.shinhan.soloplay.theme.ThemeRepository1;
+import com.shinhan.soloplay.theme.ThemeRepository;
+import com.shinhan.soloplay.themecontent.ThemeContentRepository;
 import com.shinhan.soloplay.user.UserEntity;
 import com.shinhan.soloplay.user.UserRepository;
 
@@ -22,7 +22,7 @@ public class CouponServiceImpl implements CouponService {
 	final CouponRepository couponRepository;
 	final CouponHistoryRepository couponHistoryRepository;
 	final UserRepository userRepository;
-	final ThemeRepository1 themeRepository;
+	final ThemeRepository themeRepository;
 	final ThemeContentRepository themeContentRepository;
 
 	@Override

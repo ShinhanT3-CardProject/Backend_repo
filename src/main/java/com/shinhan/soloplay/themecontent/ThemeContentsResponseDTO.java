@@ -1,4 +1,4 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.themecontent;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

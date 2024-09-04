@@ -1,6 +1,6 @@
 package com.shinhan.soloplay.merchant;
 
-import com.shinhan.soloplay.theme.SubCategoryEntity;
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

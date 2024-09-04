@@ -1,6 +1,8 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.maincategory;
 
 import java.util.List;
+
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

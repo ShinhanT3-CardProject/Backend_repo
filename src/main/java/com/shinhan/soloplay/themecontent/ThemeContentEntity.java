@@ -1,8 +1,10 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.themecontent;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
+import com.shinhan.soloplay.theme.ThemeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
