@@ -2,6 +2,8 @@ package com.shinhan.soloplay.theme;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,10 @@ public interface ThemeRepository extends JpaRepository<ThemeEntity, Long> {
 	
 	// 전체 테마 조회 (공개여부 참) - 완료
 	List<ThemeEntity> findByThemeIsPublicTrue();
+	
+	// 전체 테마 조회 페이징
+	@Query("SELECT t FROM ThemeEntity t WHERE t.themeIsPublic = TRUE")
+	Page<ThemeEntity> findAllTheme(Pageable pageable);
 	
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
 	ThemeEntity findByThemeId(Long themeId);

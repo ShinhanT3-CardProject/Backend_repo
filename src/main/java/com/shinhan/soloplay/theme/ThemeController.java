@@ -2,6 +2,7 @@ package com.shinhan.soloplay.theme;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,16 +24,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ThemeController {
 	
-	final ThemeService themeService1;
+	final ThemeService themeService;
 	final PointService pointService;
 	final HttpSession session;
 	
 	
 	// 전체 테마 조회 (공개여부 참) - 완료
-	@GetMapping("/findAllTheme")
-	public ResponseEntity<?> findAllTheme() {
+	@GetMapping("/findAllTheme/{page}")
+	public ResponseEntity<?> findAllTheme(@PathVariable int page) {
 		try {
-			List<ThemeDetailResponseDTO> findAllTheme = themeService1.findAllTheme();
+			Page<ThemeDetailResponseDTO> findAllTheme = themeService.findAllTheme(page-1);
 			return ResponseEntity.ok(findAllTheme);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,7 +45,7 @@ public class ThemeController {
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {
 		try {
-			ThemeDetailResponseDTO findThemeDetail = themeService1.findThemeDetail(themeId);
+			ThemeDetailResponseDTO findThemeDetail = themeService.findThemeDetail(themeId);
 			return ResponseEntity.ok(findThemeDetail);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("테마를 찾을 수 없습니다.");
@@ -59,7 +60,7 @@ public class ThemeController {
 	public ResponseEntity<?> findMyTheme(HttpSession httpSession) {
 		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			List<ThemeDetailResponseDTO> findMyTheme = themeService1.findMyTheme(userId);
+			List<ThemeDetailResponseDTO> findMyTheme = themeService.findMyTheme(userId);
 			return ResponseEntity.ok(findMyTheme);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +76,7 @@ public class ThemeController {
 										HttpSession httpSession) {
 		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			ThemeRegisterDTO updateTheme = themeService1.updateTheme(themeId, themeRegisterDTO1, userId);
+			ThemeRegisterDTO updateTheme = themeService.updateTheme(themeId, themeRegisterDTO1, userId);
 			return ResponseEntity.ok(updateTheme);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정 진행 중 오류가 발생했습니다.");
@@ -89,7 +90,7 @@ public class ThemeController {
 	@DeleteMapping("/deleteTheme/{themeId}")
 	public ResponseEntity<String> deleteTheme(@PathVariable Long themeId) {
 		try {
-			themeService1.deleteTheme(themeId);
+			themeService.deleteTheme(themeId);
 			return ResponseEntity.ok("테마가 성공적으로 삭제되었습니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,7 +111,7 @@ public class ThemeController {
         themeRegisterDTO1.setUserId(userId);
 
         // 서비스 계층을 통해 테마 저장
-        ThemeRegisterDTO savedThemeDTO = themeService1.insertTheme(themeRegisterDTO1);
+        ThemeRegisterDTO savedThemeDTO = themeService.insertTheme(themeRegisterDTO1);
 
         // 생성된 테마 정보 반환
         return ResponseEntity.status(HttpStatus.CREATED).body(savedThemeDTO);
