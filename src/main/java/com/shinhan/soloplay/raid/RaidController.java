@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/raid")
+@RequestMapping("/raid")
 @RequiredArgsConstructor
 public class RaidController {
 	

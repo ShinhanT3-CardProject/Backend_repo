@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/theme")
+@RequestMapping("/theme")
 public class OpenAIController {
 
     final OpenAIService openAIService;
