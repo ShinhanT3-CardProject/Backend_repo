@@ -41,6 +41,30 @@ public class ThemeController {
 		}
 	}
 	
+	// 카테고리별 테마 조회
+	@GetMapping("/findByCategoryId/{categoryId}/{page}")
+	public ResponseEntity<?> findByCategory(@PathVariable Long categoryId, @PathVariable int page) {
+		try {
+			Page<ThemeDetailResponseDTO> themeList = themeService.findByCategory(page-1, categoryId);
+			return ResponseEntity.ok(themeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+		}
+	}
+		
+	// 테마 검색
+	@GetMapping("/search/{search}/{page}")
+	public ResponseEntity<?> searchByName(@PathVariable String search, @PathVariable int page) {
+		try {
+			Page<ThemeDetailResponseDTO> themeList = themeService.searchByName(page-1, search);
+			return ResponseEntity.ok(themeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+		}
+	}
+	
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
 	@GetMapping("/findThemeDetail/{themeId}")
 	public ResponseEntity<?> findThemeDetail(@PathVariable Long themeId) {

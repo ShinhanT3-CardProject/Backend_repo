@@ -21,6 +21,19 @@ public interface ThemeRepository extends JpaRepository<ThemeEntity, Long> {
 	@Query("SELECT t FROM ThemeEntity t WHERE t.themeIsPublic = TRUE")
 	Page<ThemeEntity> findAllTheme(Pageable pageable);
 	
+	// 카테고리별 테마 조회 페이징
+	@Query("SELECT t FROM ThemeEntity t "
+			+ "JOIN t.themeContents tc "
+			+ "JOIN tc.subCategory sc "
+			+ "JOIN sc.mainCategory mc " 
+			+ "WHERE t.themeIsPublic = TRUE "
+			+ "AND mc.themeMainCategoryId = :themeMainCategoryId")
+	Page<ThemeEntity> findByCategory(Pageable pageable, @Param("themeMainCategoryId") Long themeMainCategoryId);
+	
+	// 테마 검색 페이징
+	@Query("SELECT t FROM ThemeEntity t WHERE t.themeIsPublic = TRUE AND themeName like :search")
+	Page<ThemeEntity> searchByName(Pageable pageable, @Param("search") String search);
+	
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
 	ThemeEntity findByThemeId(Long themeId);
 	

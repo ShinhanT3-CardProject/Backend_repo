@@ -77,6 +77,53 @@ public class ThemeServiceImpl implements ThemeService {
 	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
 	}
 	
+	// 카테고리별 테마 조회 - 페이징
+	public Page<ThemeDetailResponseDTO> findByCategory(int page, Long themeMainCategoryId) {
+		Pageable pageable = PageRequest.of(page, 5);
+		Page<ThemeEntity> themeEntities = themeRepository.findByCategory(pageable, themeMainCategoryId);
+		
+		List<ThemeDetailResponseDTO> dtoList = themeEntities.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+	        
+	        return ThemeDetailResponseDTO.builder()
+	                .themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
+
+	    // Page<ThemeDetailResponseDTO> 객체를 생성하여 반환
+	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
+	}
+			
+	// 테마 검색 - 페이징
+	public Page<ThemeDetailResponseDTO> searchByName(int page, String search){ 
+		search = "%" + search.toLowerCase() + "%";
+		Pageable pageable = PageRequest.of(page, 5);
+		Page<ThemeEntity> themeEntities = themeRepository.searchByName(pageable, search);
+		
+		List<ThemeDetailResponseDTO> dtoList = themeEntities.stream().map(themeEntity -> {
+	        MainCategoryEntity mainCategory = themeEntity.getThemeContents()
+	                .get(0)
+	                .getSubCategory()
+	                .getMainCategory();
+	        
+	        return ThemeDetailResponseDTO.builder()
+	                .themeId(themeEntity.getThemeId())
+	                .themeName(themeEntity.getThemeName())
+	                .themeMainCategoryName(mainCategory.getThemeMainCategoryName())
+	                .themeBackground(mainCategory.getThemeBackground())
+	                .build();
+	    }).collect(Collectors.toList());
+
+	    // Page<ThemeDetailResponseDTO> 객체를 생성하여 반환
+	    return new PageImpl<>(dtoList, pageable, themeEntities.getTotalElements());
+	}
+
     
 	// 테마 상세 조회, 나의 테마 상세조회 - 완료
     @Override
