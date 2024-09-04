@@ -1,7 +1,7 @@
 package com.shinhan.soloplay.merchant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shinhan.soloplay.theme.SubCategoryEntity;
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

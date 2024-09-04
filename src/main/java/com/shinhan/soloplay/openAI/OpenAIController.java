@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinhan.soloplay.theme.SubCategoriesDTO;
+import com.shinhan.soloplay.subcategory.SubCategoriesDTO;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/theme")
+@RequestMapping("/theme")
 public class OpenAIController {
 
     final OpenAIService openAIService;

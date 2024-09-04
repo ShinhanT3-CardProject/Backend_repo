@@ -1,8 +1,9 @@
-package com.shinhan.soloplay.theme;
+package com.shinhan.soloplay.subcategory;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shinhan.soloplay.maincategory.MainCategoryEntity;
 import com.shinhan.soloplay.merchant.MerchantEntity;
 
 import jakarta.persistence.Column;

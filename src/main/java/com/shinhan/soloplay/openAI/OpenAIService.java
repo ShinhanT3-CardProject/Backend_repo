@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.shinhan.soloplay.theme.SubCategoriesDTO;
+import com.shinhan.soloplay.subcategory.SubCategoriesDTO;
 
 @Service
 public class OpenAIService {

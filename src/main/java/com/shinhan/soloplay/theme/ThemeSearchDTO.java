@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThemeSearchDTO1 {
+public class ThemeSearchDTO {
 // 전체 및 나의 테마를 조회 및 상세조회 하기 위한 DTO
 	
 	//필요한 Entity 개별 항목들
@@ -57,7 +57,7 @@ public class ThemeSearchDTO1 {
 	// 필요 기능별 생성자
 	
 	// 전체 테마 조회용
-	public ThemeSearchDTO1(String themeName, String themeBackground) {
+	public ThemeSearchDTO(String themeName, String themeBackground) {
 		super();
 		this.themeName = themeName;
 		this.themeBackground = themeBackground;

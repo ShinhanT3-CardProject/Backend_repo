@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinhan.soloplay.raid.RaidEntity;
 import com.shinhan.soloplay.raid.RaidRepository;
-import com.shinhan.soloplay.theme.ThemeServiceJK;
+import com.shinhan.soloplay.theme.ThemeService;
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.transaction.Transactional;
@@ -19,7 +19,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 	
 	final ParticipantRepository participantRepository;
 	final RaidRepository raidRepository;
-	final ThemeServiceJK themeService;
+	final ThemeService themeService;
 
 	@Override
 	public List<ParticipantDTO> findByRaid(Long raidId) {

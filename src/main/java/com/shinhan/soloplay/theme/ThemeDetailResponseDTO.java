@@ -2,6 +2,8 @@ package com.shinhan.soloplay.theme;
 
 import java.util.List;
 
+import com.shinhan.soloplay.themecontent.ThemeContentsResponseDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
