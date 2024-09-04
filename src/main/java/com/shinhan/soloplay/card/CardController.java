@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinhan.soloplay.theme.MainCategoryService3;
+import com.shinhan.soloplay.maincategory.MainCategoryService;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 
 @RestController
 @RequestMapping("/card")
@@ -24,7 +23,7 @@ public class CardController {
 	CardService cardService;
 
 	@Autowired
-	MainCategoryService3 mainCategoryService3;
+	MainCategoryService mainCategoryService3;
 
 	@Autowired
 	UserCardService userCardService;

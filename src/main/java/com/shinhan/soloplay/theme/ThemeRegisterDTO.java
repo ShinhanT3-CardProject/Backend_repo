@@ -3,6 +3,8 @@ package com.shinhan.soloplay.theme;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.shinhan.soloplay.maincategory.MainCategoryEntity;
+import com.shinhan.soloplay.subcategory.SubCategoryEntity;
 import com.shinhan.soloplay.user.UserEntity;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThemeRegisterDTO1 {
+public class ThemeRegisterDTO {
 //나의 테마를 등록/수정/불러오기 하기 위한 DTO
 	
 	//필요한 Entity 개별 항목들

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinhan.soloplay.maincategory.MainCategoryDTO;
+import com.shinhan.soloplay.subcategory.SubCategoryDTO;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -16,18 +19,18 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/categories")
 public class ThemeControllerJK {
 
-    final ThemeServiceJK themeServiceJK;
+    final ThemeService themeService;
 
     @GetMapping
     public List<MainCategoryDTO> getAllMainCategories() {
-        return themeServiceJK.getAllMainCategories().stream()
+        return themeService.getAllMainCategories().stream()
                 .map(entity -> new MainCategoryDTO(entity.getThemeMainCategoryId(), entity.getThemeMainCategoryName()))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{mainCategoryId}/subcategories")
     public List<SubCategoryDTO> getSubCategoriesByMainCategory(@PathVariable Long mainCategoryId) {
-        return themeServiceJK.getSubCategoriesByMainCategory(mainCategoryId).stream()
+        return themeService.getSubCategoriesByMainCategory(mainCategoryId).stream()
                 .map(entity -> new SubCategoryDTO(entity.getThemeSubCategoryId(), entity.getThemeSubCategoryName(), entity.getMainCategory().getThemeMainCategoryName()))
                 .collect(Collectors.toList());
     }
@@ -36,6 +39,6 @@ public class ThemeControllerJK {
     @GetMapping("/themeCount")
     public Long getTheme(HttpSession httpSession) {
     	String userId = (String) httpSession.getAttribute("loginUser");
-    	return themeServiceJK.getThemeCount(userId);
+    	return themeService.getThemeCount(userId);
     }
 }

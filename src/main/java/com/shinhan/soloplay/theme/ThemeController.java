@@ -23,8 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ThemeController {
 	
-	final ThemeService1 themeService1;
-	final ThemeServiceImplJK themeServiceImplJK;
+	final ThemeService themeService1;
 	final PointService pointService;
 	final HttpSession session;
 	
@@ -72,11 +71,11 @@ public class ThemeController {
 	// 테마 수정 (나의 테마 상세조회에서 가능)
 	@PutMapping("/updateTheme/{themeId}")
 	public ResponseEntity<?> updateTheme(@PathVariable Long themeId,
-										@RequestBody ThemeRegisterDTO1 themeRegisterDTO1,
+										@RequestBody ThemeRegisterDTO themeRegisterDTO1,
 										HttpSession httpSession) {
 		String userId = (String) httpSession.getAttribute("loginUser");
 		try {
-			ThemeRegisterDTO1 updateTheme = themeService1.updateTheme(themeId, themeRegisterDTO1, userId);
+			ThemeRegisterDTO updateTheme = themeService1.updateTheme(themeId, themeRegisterDTO1, userId);
 			return ResponseEntity.ok(updateTheme);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정 진행 중 오류가 발생했습니다.");
@@ -100,7 +99,7 @@ public class ThemeController {
 	
 	// 테마 등록
     @PostMapping("/insertTheme")
-    public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO1 themeRegisterDTO1, HttpSession httpSession) {
+    public ResponseEntity<?> insertTheme(@RequestBody ThemeRegisterDTO themeRegisterDTO1, HttpSession httpSession) {
         // 세션에서 로그인된 사용자 ID 가져오기
         String userId = (String) httpSession.getAttribute("loginUser");
         if (userId == null) {
@@ -111,7 +110,7 @@ public class ThemeController {
         themeRegisterDTO1.setUserId(userId);
 
         // 서비스 계층을 통해 테마 저장
-        ThemeRegisterDTO1 savedThemeDTO = themeService1.insertTheme(themeRegisterDTO1);
+        ThemeRegisterDTO savedThemeDTO = themeService1.insertTheme(themeRegisterDTO1);
 
         // 생성된 테마 정보 반환
         return ResponseEntity.status(HttpStatus.CREATED).body(savedThemeDTO);

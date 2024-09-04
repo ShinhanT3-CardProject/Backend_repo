@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.shinhan.soloplay.themecontent.ThemeContentEntity;
 import com.shinhan.soloplay.user.UserEntity;
 
 import jakarta.persistence.CascadeType;
