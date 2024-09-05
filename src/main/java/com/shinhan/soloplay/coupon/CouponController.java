@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shinhan.soloplay.theme.ThemeService1;
+import com.shinhan.soloplay.theme.ThemeService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,7 +23,7 @@ public class CouponController {
     CouponService couponService;
 	
 	@Autowired
-	ThemeService1 themeService;
+	ThemeService themeService;
 	
 	@Autowired
 	HttpSession session;

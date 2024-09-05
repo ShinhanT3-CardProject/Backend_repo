@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.shinhan.soloplay.theme.ThemeRepository1;
+import com.shinhan.soloplay.theme.ThemeRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
 public class ThemeTest {
 	
 	@Autowired
-	ThemeRepository1 themeRepository1;
+	ThemeRepository themeRepository1;
 	
 	@Test
 	@Transactional

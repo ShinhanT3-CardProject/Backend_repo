@@ -15,13 +15,13 @@ import com.shinhan.soloplay.participant.ParticipantDTO;
 import com.shinhan.soloplay.participant.ParticipantService;
 import com.shinhan.soloplay.point.PointDTO;
 import com.shinhan.soloplay.point.PointService;
-import com.shinhan.soloplay.theme.ThemeServiceJK;
+import com.shinhan.soloplay.theme.ThemeService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/raid")
+@RequestMapping("/raid")
 @RequiredArgsConstructor
 public class RaidController {
 	
@@ -29,7 +29,7 @@ public class RaidController {
 	final CardUsageHistoryService cardUsageHistoryService;
 	final ParticipantService participantService;
 	final PointService pointService;
-	final ThemeServiceJK themeService;
+	final ThemeService themeService;
 	
 	@GetMapping("/battle/{raidId}")
 	public BattleResponseDTO battleDisplay(@PathVariable Long raidId, HttpSession httpSession) {
