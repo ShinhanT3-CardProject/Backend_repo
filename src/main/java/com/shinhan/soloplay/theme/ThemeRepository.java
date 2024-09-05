@@ -22,7 +22,7 @@ public interface ThemeRepository extends JpaRepository<ThemeEntity, Long> {
 	Page<ThemeEntity> findAllTheme(Pageable pageable);
 	
 	// 카테고리별 테마 조회 페이징
-	@Query("SELECT t FROM ThemeEntity t "
+	@Query("SELECT DISTINCT t FROM ThemeEntity t "
 			+ "JOIN t.themeContents tc "
 			+ "JOIN tc.subCategory sc "
 			+ "JOIN sc.mainCategory mc " 
