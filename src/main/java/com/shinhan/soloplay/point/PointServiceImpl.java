@@ -140,8 +140,8 @@ public class PointServiceImpl implements PointService {
     //스탬프 미션 달성시 랜덤 포인트 지급(1~500P)
     @Transactional
     public int giveRandomPointReward(String userId, Long themeContentId) {
-    	if (!themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded()) {
-    		System.out.println(!themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded());
+    	if (!themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded() 
+    			|| themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded() == null) {
     		// 1 ~ 500 사이의 랜덤 포인트 생성
             Random random = new Random();
             int randomPoints = random.nextInt(500) + 1;  // 1부터 500까지의 값 생성
