@@ -143,6 +143,7 @@ public class PointServiceImpl implements PointService {
     public int giveRandomPointReward(String userId, Long themeContentId) {
     	ThemeContentEntity themeContentEntity = themeContentRepository.findById(themeContentId).get();
     	if (themeContentEntity.getThemeIsSuccess() && (!themeContentEntity.getThemeContentIsRewarded()|| themeContentEntity.getThemeContentIsRewarded()==null) ) {
+
     		// 1 ~ 500 사이의 랜덤 포인트 생성
             Random random = new Random();
             int randomPoints = random.nextInt(500) + 1;  // 1부터 500까지의 값 생성
