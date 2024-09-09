@@ -262,6 +262,7 @@ public class ThemeServiceImpl implements ThemeService {
 	                    .theme(themeEntity)  // ThemeEntity와 연결
 	                    .subCategory(subCategory)  // SubCategoryEntity와 연결
 	                    .themeIsSuccess(false)  // 초기 상태를 설정
+	                    .themeContentIsRewarded(false)
 	                    .build())
 	            .collect(Collectors.toList());
 
