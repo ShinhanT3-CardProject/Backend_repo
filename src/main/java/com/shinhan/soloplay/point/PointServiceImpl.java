@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shinhan.soloplay.themecontent.ThemeContentEntity;
 import com.shinhan.soloplay.themecontent.ThemeContentRepository;
 import com.shinhan.soloplay.user.UserEntity;
 
@@ -140,8 +141,8 @@ public class PointServiceImpl implements PointService {
     //스탬프 미션 달성시 랜덤 포인트 지급(1~500P)
     @Transactional
     public int giveRandomPointReward(String userId, Long themeContentId) {
-    	if (!themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded()) {
-    		System.out.println(!themeContentRepository.findById(themeContentId).get().getThemeContentIsRewarded());
+    	ThemeContentEntity themeContentEntity = themeContentRepository.findById(themeContentId).get();
+    	if (themeContentEntity.getThemeIsSuccess() && (!themeContentEntity.getThemeContentIsRewarded()|| themeContentEntity.getThemeContentIsRewarded()==null) ) {
     		// 1 ~ 500 사이의 랜덤 포인트 생성
             Random random = new Random();
             int randomPoints = random.nextInt(500) + 1;  // 1부터 500까지의 값 생성
@@ -150,7 +151,7 @@ public class PointServiceImpl implements PointService {
             PointDTO pointDTO = PointDTO.builder()
                 .pointName("랜덤 포인트 지급")
                 .amount(randomPoints)
-                .isAdd(1) // 1은 포인트 추가를 의미
+                .isAdd(1) // 1은 테마 적립
                 .category(1)
                 .build();
 
