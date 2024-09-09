@@ -146,6 +146,7 @@ public class ThemeServiceImpl implements ThemeService {
     		            .themeIsSuccess(contents.getThemeIsSuccess())
     		            .themeSubCategoryName(contents.getSubCategory().getThemeSubCategoryName())
     		            .themeSubCategoryId(contents.getSubCategory().getThemeSubCategoryId())
+    		            .themeContentId(contents.getThemeContentId())
     		            .build()
     		    )
     		    .collect(Collectors.toList());
@@ -159,6 +160,7 @@ public class ThemeServiceImpl implements ThemeService {
     			.themeIsPublic(themeEntity.getThemeIsPublic())
     			.themeBackground(themeBackground)
     			.themeContents(contentsStore)
+
     			.build();
     	
     	
