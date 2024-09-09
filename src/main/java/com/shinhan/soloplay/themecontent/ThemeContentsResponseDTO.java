@@ -16,4 +16,6 @@ public class ThemeContentsResponseDTO {
 	String themeSubCategoryName;
 	
 	Long themeSubCategoryId;
+	
+	Long themeContentId;
 }
